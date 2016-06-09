@@ -1,6 +1,13 @@
 package txtextcontrol.reportingcloud;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 import com.google.gson.Gson;
 
 /**
@@ -12,10 +19,11 @@ public class ReportingCloud {
     private static final String DEFAULT_VERSION = "v1";
     private static final int DEFAULT_TIMEOUT = 10;
     private static final String USER_AGENT = "Mozilla/5.0";
+    private Gson _gson;
 
     private String _username;
     private String _password;
-    private String _baseUri;
+    private URI _baseUri;
     private String _version;
 
     /**
@@ -27,8 +35,9 @@ public class ReportingCloud {
     public ReportingCloud(String username, String password, String baseUri) {
         _username = username;
         _password = password;
-        _baseUri = baseUri;
+        _baseUri = URI.create(baseUri);
         _version = DEFAULT_VERSION;
+        _gson = new Gson();
     }
 
     /**
@@ -40,20 +49,28 @@ public class ReportingCloud {
         this(username, password, DEFAULT_BASE_URI);
     }
 
-    public int getTemplateCount(String templateName) {
+    public int getTemplateCount(String templateName) throws IOException {
         // ToDo: implement
+        String res = get("/templates/count");
         return 0;
     }
 
-    private static String get(String endpoint, HashMap<String, Object> params) {
-        // ToDo: implement
+    private String get(String endpoint) throws IOException {
+        return get(endpoint, null);
+    }
+
+    private String get(String endpoint, HashMap<String, Object> params) throws IOException {
+        String queryString = queryStringFromHashMap(params);
+
         return "";
     }
 
-    private static String queryStringFromHashMap(HashMap<String, Object> hasMap) {
-        // ToDo: implement
-        Gson g = new Gson();
-
-        return "";
+    private static String queryStringFromHashMap(HashMap<String, Object> hashMap) {
+        if (hashMap == null) return "";
+        List<String> params = new ArrayList<String>();
+        for (String key : hashMap.keySet()) {
+            params.add(key + "=" + hashMap.get(key).toString());
+        }
+        return String.join("&", params);
     }
 }
