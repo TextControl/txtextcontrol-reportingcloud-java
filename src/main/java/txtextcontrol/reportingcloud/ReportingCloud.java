@@ -146,19 +146,65 @@ public class ReportingCloud {
         return Base64.getDecoder().decode(res);
     }
 
+    /**
+     * Merges and returns a template from the template storage or an uploaded template with JSON data.
+     * @param mergeBody The MergeBody object contains the datasource
+     *                  as a JSON data object and optionally, a template encoded as a Base64 string.
+     * @return The response body contains an array of the created documents.
+     * @throws IllegalArgumentException
+     * @throws IOException
+     */
     public List<byte[]> mergeDocument(MergeBody mergeBody) throws IllegalArgumentException, IOException {
         return mergeDocument(mergeBody, null);
     }
 
+    /**
+     * Merges and returns a template from the template storage or an uploaded template with JSON data.
+     * @param mergeBody The MergeBody object contains the datasource
+     *                  as a JSON data object and optionally, a template encoded as a Base64 string.
+     * @param templateName The name of the template in the template storage. If no template
+     *                     name is specified, the template must be uploaded in the MergeBody
+     *                     object of this request.
+     * @return The response body contains an array of the created documents.
+     * @throws IllegalArgumentException
+     * @throws IOException
+     */
     public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName) throws IllegalArgumentException, IOException {
         return mergeDocument(mergeBody, templateName, ReturnFormat.PDF);
     }
 
+    /**
+     * Merges and returns a template from the template storage or an uploaded template with JSON data.
+     * @param mergeBody The MergeBody object contains the datasource
+     *                  as a JSON data object and optionally, a template encoded as a Base64 string.
+     * @param templateName The name of the template in the template storage. If no template
+     *                     name is specified, the template must be uploaded in the MergeBody
+     *                     object of this request.
+     * @param returnFormat The format of the created document.
+     * @return The response body contains an array of the created documents.
+     * @throws IllegalArgumentException
+     * @throws IOException
+     */
     public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName, ReturnFormat returnFormat) throws IllegalArgumentException, IOException {
         return mergeDocument(mergeBody, templateName, returnFormat, false);
     }
 
+    /**
+     * Merges and returns a template from the template storage or an uploaded template with JSON data.
+     * @param mergeBody The MergeBody object contains the datasource
+     *                  as a JSON data object and optionally, a template encoded as a Base64 string.
+     * @param templateName The name of the template in the template storage. If no template
+     *                     name is specified, the template must be uploaded in the MergeBody
+     *                     object of this request.
+     * @param returnFormat The format of the created document.
+     * @param append Specifies whether the documents should be appened to one resulting
+     *               document when more than 1 data row is passed.
+     * @return The response body contains an array of the created documents.
+     * @throws IllegalArgumentException
+     * @throws IOException
+     */
     public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName, ReturnFormat returnFormat, boolean append) throws IllegalArgumentException, IOException {
+
         // Parameter validation
         if ((mergeBody.getTemplate() != null) && (templateName != null)) {
             throw new InvalidParameterException("Template name and template data must not be present at the same time.");
