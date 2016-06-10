@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.*;
+import java.security.InvalidParameterException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -64,6 +65,7 @@ public class ReportingCloud {
         gb.registerTypeAdapter(Template.class, new TemplateDeserializer());
         gb.registerTypeAdapter(AccountSettings.class, new AccountSettingsDeserializer());
         gb.registerTypeAdapter(MergeSettings.class, new MergeSettingsSerializer());
+        gb.registerTypeAdapter(MergeBody.class, new MergeBodySerializer());
         _gson = gb.create();
     }
 
@@ -153,16 +155,16 @@ public class ReportingCloud {
     }
 
     public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName, ReturnFormat returnFormat) throws IllegalArgumentException, IOException {
-        return mergeDocument(mergeBody, templateName, returnFormat);
+        return mergeDocument(mergeBody, templateName, returnFormat, false);
     }
 
     public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName, ReturnFormat returnFormat, boolean append) throws IllegalArgumentException, IOException {
         // Parameter validation
         if ((mergeBody.getTemplate() != null) && (templateName != null)) {
-            throw new IllegalArgumentException("Template name and template data must not be present at the same time.");
+            throw new InvalidParameterException("Template name and template data must not be present at the same time.");
         }
         else if ((mergeBody.getTemplate() == null) && (templateName == null)) {
-            throw new IllegalArgumentException("Either a template name or template data must be present.");
+            throw new InvalidParameterException("Either a template name or template data must be present.");
         }
         // Create query parameters
         HashMap<String, Object> params = new HashMap<>();
@@ -221,13 +223,13 @@ public class ReportingCloud {
         String queryString = queryStringFromHashMap(params);
 
         // DEBUG OUTPUT (ToDo: remove)
-        System.out.println("Query string: " + queryString);
+        // System.out.println("Query string: " + queryString);
 
         // Create connection
         String strUrl = _baseUrl + "/" + _version + endpoint + "/" + queryString;
 
         // DEBUG OUTPUT (ToDo: remove)
-        System.out.println("URL: " + strUrl);
+        // System.out.println("URL: " + strUrl);
 
         URL url = new URL(strUrl);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -245,7 +247,7 @@ public class ReportingCloud {
         if ((strBodyJson != null) && (strBodyJson.length() > 0)) {
 
             // DEBUG OUTPUT (ToDo: remove)
-            System.out.println("Body: " + strBodyJson);
+            // System.out.println("Body: " + strBodyJson);
 
             con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             byte[] bodyUTF8 = strBodyJson.getBytes("UTF-8");

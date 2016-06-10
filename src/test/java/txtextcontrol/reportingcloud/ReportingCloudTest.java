@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by thorsten on 09.06.2016.
@@ -66,5 +66,67 @@ public class ReportingCloudTest {
         Assert.assertEquals(as.getSerialNumber().length(), 13);
 
         // ToDo: Assert more stuff
+    }
+
+    @Test
+    public void mergeDocument() throws Exception {
+        List<Object> md = new ArrayList<>();
+
+        // Create some dummy data
+        HashMap<String, Object> item = new HashMap<>();
+        List<Object> nestedList = new ArrayList<>();
+        HashMap<String, Object> nestedItem = new HashMap<>();
+
+        nestedItem.put("item_no", 23);
+        nestedItem.put("item_description", "An Item.");
+        nestedItem.put("item_total", 234.56);
+        nestedList.add(nestedItem);
+
+        nestedItem = new HashMap<>();
+        nestedItem.put("item_no", 34);
+        nestedItem.put("item_description", "Another Item.");
+        nestedItem.put("item_total", 345.67);
+        nestedList.add(nestedItem);
+
+        item.put("billto_name", "Will Ferell");
+        item.put("recipient_name", "Colin Farrell");
+        item.put("item", nestedList);
+        md.add(item);
+
+        item = new HashMap<>();
+        nestedList = new ArrayList<>();
+        nestedItem = new HashMap<>();
+
+        nestedItem.put("item_no", 45);
+        nestedItem.put("item_description", "Yet another item.");
+        nestedItem.put("item_total", 567.89);
+        nestedList.add(nestedItem);
+
+        nestedItem = new HashMap<>();
+        nestedItem.put("item_no", 56);
+        nestedItem.put("item_description", "And another one.");
+        nestedItem.put("item_total", 678.90);
+        nestedList.add(nestedItem);
+
+        item.put("billto_name", "Morgan Freeman");
+        item.put("recipient_name", "Martin Freeman");
+        item.put("item", nestedList);
+        md.add(item);
+
+        MergeSettings ms = new MergeSettings();
+        ms.setAuthor("John Doe");
+        ms.setDocumentTitle("A document merged by Text Control ReportingCloud.");
+        MergeBody mb = new MergeBody(md, ms);
+
+        // Merge the document
+        List<byte[]> mergeResult = _r.mergeDocument(mb, "sample_invoice.tx");
+
+        Assert.assertEquals(mergeResult.size(), 2);
+
+        // Check for PDF magic number
+        Assert.assertEquals(mergeResult.get(0)[0], 0x25);
+        Assert.assertEquals(mergeResult.get(0)[1], 0x50);
+        Assert.assertEquals(mergeResult.get(0)[2], 0x44);
+        Assert.assertEquals(mergeResult.get(0)[3], 0x46);
     }
 }

@@ -14,7 +14,9 @@
  */
 package txtextcontrol.reportingcloud;
 
-import java.util.HashMap;
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by thorsten on 10.06.2016.
@@ -23,17 +25,21 @@ public class MergeBody {
 
     private byte[] _template;
     private MergeSettings _mergeSettings;
-    private HashMap<String, Object> _mergeData;
+    private List<Object> _mergeData;
 
-    public MergeBody(HashMap<String, Object> mergeData) {
+    public MergeBody(List<Object> mergeData) throws InvalidParameterException {
         this(mergeData, null);
     }
 
-    public MergeBody(HashMap<String, Object> mergeData, MergeSettings mergeSettings) {
+    public MergeBody(List<Object> mergeData, MergeSettings mergeSettings) throws InvalidParameterException {
         this(mergeData, mergeSettings, null);
     }
 
-    public MergeBody(HashMap<String, Object> mergeData, MergeSettings mergeSettings, byte[] template) {
+    public MergeBody(List<Object> mergeData, MergeSettings mergeSettings, byte[] template) throws InvalidParameterException {
+        if (mergeData == null) {
+            throw new InvalidParameterException("mergeData must not be null.");
+        }
+
         this._template = template;
         this._mergeSettings = mergeSettings;
         this._mergeData = mergeData;
@@ -55,11 +61,11 @@ public class MergeBody {
         this._mergeSettings = mergeSettings;
     }
 
-    public HashMap<String, Object> getMergeData() {
+    public List<Object> getMergeData() {
         return _mergeData;
     }
 
-    public void setMergeData(HashMap<String, Object> mergeData) {
+    public void setMergeData(List<Object> mergeData) {
         this._mergeData = mergeData;
     }
 }

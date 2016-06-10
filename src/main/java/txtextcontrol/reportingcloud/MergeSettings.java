@@ -30,6 +30,14 @@ public class MergeSettings {
 
     public MergeSettings() {
         this._removeEmptyFields = true;
+        this._removeEmptyBlocks = true;
+        this._removeEmptyImages = true;
+        this._removeTrailingWhitespace = true;
+        this._author = null;
+        this._creatorApplication = null;
+        this._documentSubject = null;
+        this._documentTitle = null;
+        this._userPassword = null;
     }
 
     public boolean getRemoveEmptyFields() {
