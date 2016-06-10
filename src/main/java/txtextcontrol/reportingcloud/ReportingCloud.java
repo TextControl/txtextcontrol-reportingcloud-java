@@ -26,7 +26,10 @@ import java.util.stream.Collectors;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import txtextcontrol.reportingcloud.gson.AccountSettingsDeserializer;
+import txtextcontrol.reportingcloud.gson.MergeBodySerializer;
+import txtextcontrol.reportingcloud.gson.MergeSettingsSerializer;
+import txtextcontrol.reportingcloud.gson.TemplateDeserializer;
 
 /**
  * Created by thorsten on 09.06.2016.
