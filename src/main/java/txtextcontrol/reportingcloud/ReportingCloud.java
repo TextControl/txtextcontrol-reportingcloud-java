@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.sun.deploy.net.HttpResponse;
+import com.sun.deploy.ui.ImageLoader;
 import txtextcontrol.reportingcloud.gson.AccountSettingsDeserializer;
 import txtextcontrol.reportingcloud.gson.MergeBodySerializer;
 import txtextcontrol.reportingcloud.gson.MergeSettingsSerializer;
@@ -132,7 +134,7 @@ public class ReportingCloud {
     /**
      * Returns a list of thumbnails of a specific template.
      * @param templateName  The filename of the template in the template storage.
-     * @param zoomFactor An Integer value between +1+ and +400+ to set the percentage
+     * @param zoomFactor An Integer value between 1 and 400 to set the percentage
      *                   zoom factor of the created thumbnail images.
      * @return An array of binary image data.
      * @throws IllegalArgumentException
@@ -190,9 +192,22 @@ public class ReportingCloud {
 
         TemplateNameValidator.validate(templateName);
 
-        // ToDo: implement
+        // Prepare query parameters
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("templateName", templateName);
+        params.put("zoomFactor", zoomFactor);
+        params.put("fromPage", fromPage);
+        params.put("toPage", toPage);
+        if (imageFormat != ImageFormat.PNG) {
+            params.put("imageFormat", imageFormat.name());
+        }
 
-        return new ArrayList<>();
+        // Send request
+        String res = request(ReqType.GET, "/templates/thumbnails", params);
+
+        // Parse response
+        List<String> imagesB64 = _gson.fromJson(res, new TypeToken<List<String>>(){}.getType());
+        return imagesB64.stream().map(img -> Base64.getDecoder().decode(img)).collect(Collectors.toList());
     }
 
     /**
@@ -206,8 +221,17 @@ public class ReportingCloud {
      */
     public void uploadTemplate(String templateName, byte[] templateData) throws IllegalArgumentException, IOException {
         TemplateNameValidator.validate(templateName);
+        TemplateDataValidator.validate(templateData);
 
-        // ToDo: implement
+        // Base64-encode binary template data
+        String templateDataB64 = Base64.getEncoder().encodeToString(templateData);
+
+        // Prepare query parameters
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("templateName", templateName);
+
+        // Send request
+        request(ReqType.POST, "/templates/upload", params, "\"" + templateDataB64 + "\"");
     }
 
     /**
@@ -218,12 +242,20 @@ public class ReportingCloud {
      * @return Returns if the template with the given name exists in the template
      * storage.
      */
-    public boolean templateExists(String templateName) {
+    public boolean templateExists(String templateName) throws IllegalArgumentException, IOException {
         TemplateNameValidator.validate(templateName);
 
-        // ToDo: implement
+        // Prepare query parameters
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("templateName", templateName);
 
-        return false;
+        // Send request
+        String res = request(ReqType.GET, "/templates/exists", params);
+        switch (res) {
+            case "true": return true;
+            case "false": return false;
+            default: throw new IllegalArgumentException("Unknown response value received.");
+        }
     }
 
     /**
@@ -232,12 +264,19 @@ public class ReportingCloud {
      * @param templateName The filename of the template in the template storage.
      * @return The template document data.
      */
-    public byte[] downloadTemplate(String templateName) {
+    public byte[] downloadTemplate(String templateName) throws IllegalArgumentException, IOException {
         TemplateNameValidator.validate(templateName);
 
-        // ToDo: implement
+        // Prepare query parameters
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("templateName", templateName);
 
-        return new byte[0];
+        // Send request
+        String res = request(ReqType.GET, "/templates/download", params);
+
+        // Parse and return response
+        res = res.substring(1, res.length() - 2);
+        return Base64.getDecoder().decode(res);
     }
 
     /**
@@ -271,11 +310,19 @@ public class ReportingCloud {
      */
     public byte[] convertDocument(byte[] templateData, ReturnFormat returnFormat)
             throws IllegalArgumentException, IOException {
+        TemplateDataValidator.validate(templateData);
+
+        // Convert template to base64
         String dataB64 = Base64.getEncoder().encodeToString(templateData);
 
+        // Prepare query parameters
         HashMap<String, Object> params = new HashMap<>();
         params.put("returnFormat", returnFormat.name());
+
+        // Send request
         String res = request(ReqType.POST, "/document/convert", params, "\"" + dataB64 + "\"");
+
+        // Parse and return response
         res = res.substring(1, res.length() - 2);
         return Base64.getDecoder().decode(res);
     }
@@ -349,7 +396,7 @@ public class ReportingCloud {
         else if ((mergeBody.getTemplate() == null) && (templateName == null)) {
             throw new InvalidParameterException("Either a template name or template data must be present.");
         }
-        // Create query parameters
+        // Prepare query parameters
         HashMap<String, Object> params = new HashMap<>();
         params.put("returnFormat", returnFormat.name());
         params.put("append", append);
@@ -407,15 +454,8 @@ public class ReportingCloud {
             throws IllegalArgumentException, IOException {
         String queryString = queryStringFromHashMap(params);
 
-        // DEBUG OUTPUT (ToDo: remove)
-        // System.out.println("Query string: " + queryString);
-
         // Create connection
         String strUrl = _baseUrl + "/" + _version + endpoint + "/" + queryString;
-
-        // DEBUG OUTPUT (ToDo: remove)
-        // System.out.println("URL: " + strUrl);
-
         URL url = new URL(strUrl);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setDoOutput(true);
@@ -430,10 +470,6 @@ public class ReportingCloud {
 
         // Add body content if necessary
         if ((strBodyJson != null) && (strBodyJson.length() > 0)) {
-
-            // DEBUG OUTPUT (ToDo: remove)
-            System.out.println("Body: " + strBodyJson);
-
             con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             byte[] bodyUTF8 = strBodyJson.getBytes("UTF-8");
             try (OutputStream os = con.getOutputStream()) {
@@ -468,8 +504,14 @@ public class ReportingCloud {
         }
 
         int responseCode = con.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) return result.toString();
-        else throw new IllegalArgumentException(result.toString());
+        switch (responseCode) {
+            case HttpURLConnection.HTTP_OK:
+            case HttpURLConnection.HTTP_ACCEPTED:
+            case HttpURLConnection.HTTP_CREATED:
+            case HttpURLConnection.HTTP_NO_CONTENT:
+                return result.toString();
+            default: throw new IllegalArgumentException(result.toString());
+        }
     }
 
     /**

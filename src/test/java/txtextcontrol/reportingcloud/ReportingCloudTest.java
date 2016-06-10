@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,36 +20,44 @@ public class ReportingCloudTest {
     private ReportingCloud _r;
     private byte[] _testDocData;
 
+    private static final String TestTemplateName = "__java_wrapper_test.tx";
+
     public ReportingCloudTest() throws IOException {
         Path currentRelPath = Paths.get("");
         String absPath = currentRelPath.toAbsolutePath().toString();
-        String testDocPath = absPath + "\\src\\test\\resources\\__java_wrapper_test.tx";
+        String testDocPath = absPath + "\\src\\test\\resources\\" + TestTemplateName;
         _testDocData = Files.readAllBytes(Paths.get(testDocPath));
     }
 
     @Before
     public void initialize() throws IOException {
+        // ToDo: Fill in your ReportingCloud credentials here
         _r = new ReportingCloud("<USERNAME>", "<PASSWORD>");
     }
 
     @Test
     public void getTemplateCount() throws Exception {
+        // ToDo: adapt the following to your own template storage
         int nCount = _r.getTemplateCount();
-        Assert.assertEquals(nCount, 2);
+        Assert.assertEquals(2, nCount);
     }
 
     @Test
     public void getTemplatePageCount() throws Exception {
+        // ToDo: adapt the following to your own template storage
         int nPages = _r.getTemplatePageCount("new_template.docx");
-        Assert.assertEquals(nPages, 2);
+        Assert.assertEquals(2, nPages);
     }
 
     @Test
     public void listTemplates() throws Exception {
         List<Template> templates = _r.listTemplates();
-        Assert.assertEquals(templates.size(), 2);
+        Assert.assertEquals(2, templates.size());
 
-        // ToDo: check if template list contains meaningful data
+        // ToDo: adapt the following to your own template storage
+        Assert.assertEquals("sample_invoice.tx", templates.get(1).getTemplateName());
+        Assert.assertEquals(34845, templates.get(1).getSize());
+        Assert.assertEquals(LocalDateTime.parse("2016-05-24T15:24:57"), templates.get(1).getModified());
     }
 
     @Test
@@ -56,18 +65,20 @@ public class ReportingCloudTest {
         byte[] converted = _r.convertDocument(_testDocData, ReturnFormat.PDF);
 
         // Check for PDF magic number
-        Assert.assertEquals(converted[0], 0x25);
-        Assert.assertEquals(converted[1], 0x50);
-        Assert.assertEquals(converted[2], 0x44);
-        Assert.assertEquals(converted[3], 0x46);
+        Assert.assertEquals(0x25, converted[0]);
+        Assert.assertEquals(0x50, converted[1]);
+        Assert.assertEquals(0x44, converted[2]);
+        Assert.assertEquals(0x46, converted[3]);
     }
 
     @Test
     public void getAccountSettings() throws Exception {
+        // ToDo: adapt the following to your own account details
         AccountSettings as = _r.getAccountSettings();
-        Assert.assertEquals(as.getSerialNumber().length(), 13);
-
-        // ToDo: Assert more stuff
+        Assert.assertEquals(13, as.getSerialNumber().length());
+        Assert.assertEquals(LocalDateTime.parse("2020-01-01T00:00"), as.getValidUntil());
+        Assert.assertEquals(100000, as.getMaxDocuments());
+        Assert.assertEquals(500, as.getMaxTemplates());
     }
 
 
@@ -119,42 +130,71 @@ public class ReportingCloudTest {
         // Merge the document
         List<byte[]> mergeResult = _r.mergeDocument(mb, "sample_invoice.tx");
 
-        Assert.assertEquals(mergeResult.size(), 2);
+        Assert.assertEquals(2, mergeResult.size());
 
         // Check for PDF magic number
-        Assert.assertEquals(mergeResult.get(0)[0], 0x25);
-        Assert.assertEquals(mergeResult.get(0)[1], 0x50);
-        Assert.assertEquals(mergeResult.get(0)[2], 0x44);
-        Assert.assertEquals(mergeResult.get(0)[3], 0x46);
+        Assert.assertEquals(0x25, mergeResult.get(0)[0]);
+        Assert.assertEquals(0x50, mergeResult.get(0)[1]);
+        Assert.assertEquals(0x44, mergeResult.get(0)[2]);
+        Assert.assertEquals(0x46, mergeResult.get(0)[3]);
     }
 
     @Test
     public void uploadTemplate() throws Exception {
-        // ToDo: implement
-        Assert.assertTrue("NOT IMPLEMENTED YET", false);
+        _r.uploadTemplate(TestTemplateName, _testDocData);
+        Assert.assertTrue(_r.templateExists(TestTemplateName));
+        _r.deleteTemplate(TestTemplateName);
+        Assert.assertFalse(_r.templateExists(TestTemplateName));
     }
 
     @Test
     public void templateExists() throws Exception {
-        // ToDo: implement
-        Assert.assertTrue("NOT IMPLEMENTED YET", false);
+        _r.uploadTemplate(TestTemplateName, _testDocData);
+        Assert.assertTrue(_r.templateExists(TestTemplateName));
+        _r.deleteTemplate(TestTemplateName);
+        Assert.assertFalse(_r.templateExists(TestTemplateName));
     }
 
     @Test
     public void downloadTemplate() throws Exception {
-        // ToDo: implement
-        Assert.assertTrue("NOT IMPLEMENTED YET", false);
+        _r.uploadTemplate(TestTemplateName, _testDocData);
+        Assert.assertTrue(_r.templateExists(TestTemplateName));
+        byte[] downloaded = _r.downloadTemplate(TestTemplateName);
+        Assert.assertArrayEquals(_testDocData, downloaded);
     }
 
     @Test
     public void getTemplateThumbnails() throws Exception {
-        // ToDo: implement
-        Assert.assertTrue("NOT IMPLEMENTED YET", false);
+        _r.uploadTemplate(TestTemplateName, _testDocData);
+        Assert.assertTrue(_r.templateExists(TestTemplateName));
+
+        // Get PNGs
+        List<byte[]> thumbnails = _r.getTemplateThumbnails(TestTemplateName, 25);
+        Assert.assertEquals(3, thumbnails.size());
+
+        // Check for PNG magic number
+        Assert.assertEquals(0x89, (int) thumbnails.get(0)[0] & 0xFF);
+        Assert.assertEquals(0x50, thumbnails.get(0)[1]);
+        Assert.assertEquals(0x4E, thumbnails.get(0)[2]);
+        Assert.assertEquals(0x47, thumbnails.get(0)[3]);
+        Assert.assertEquals(0x0D, thumbnails.get(0)[4]);
+
+        // Get JPGs
+        thumbnails = _r.getTemplateThumbnails(TestTemplateName, 25, 1, 0, ImageFormat.JPG);
+
+        // Check for JPG magic number
+        Assert.assertEquals(0xFF, (int) thumbnails.get(0)[0] & 0xFF);
+        Assert.assertEquals(0xD8, (int) thumbnails.get(0)[1] & 0xFF);
+
+        _r.deleteTemplate(TestTemplateName);
+        Assert.assertFalse(_r.templateExists(TestTemplateName));
     }
 
     @Test
     public void deleteTemplate() throws Exception {
-        // ToDo: implement
-        Assert.assertTrue("NOT IMPLEMENTED YET", false);
+        _r.uploadTemplate(TestTemplateName, _testDocData);
+        Assert.assertTrue(_r.templateExists(TestTemplateName));
+        _r.deleteTemplate(TestTemplateName);
+        Assert.assertFalse(_r.templateExists(TestTemplateName));
     }
 }
