@@ -1,21 +1,38 @@
+/**
+ * ReportingCloud Java Wrapper
+ *
+ * Official wrapper (authored by Text Control GmbH, publisher of ReportingCloud) to access 
+ * ReportingCloud in Java.
+ *
+ * Go to http://www.reporting.cloud to learn more about ReportingCloud
+ * Go to https://github.com/TextControl/txtextcontrol-reportingcloud-java for the
+ * canonical source repository.
+ *
+ * License: https://raw.githubusercontent.com/TextControl/txtextcontrol-reportingcloud-java/master/LICENSE.md
+ *
+ * Copyright: © 2016 Text Control GmbH 
+ */
 package txtextcontrol.reportingcloud;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Created by thorsten on 09.06.2016.
+ * The main Wrapper class
  */
 public class ReportingCloud {
 
-    private static final String DEFAULT_BASE_URI = "http://api.reporting.cloud";
+    private static final String DEFAULT_BASE_URL = "http://api.reporting.cloud";
     private static final String DEFAULT_VERSION = "v1";
     private static final int DEFAULT_TIMEOUT = 10;
     private static final String USER_AGENT = "Mozilla/5.0";
@@ -23,54 +40,250 @@ public class ReportingCloud {
 
     private String _username;
     private String _password;
-    private URI _baseUri;
+    private String _baseUrl;
     private String _version;
 
     /**
+     * Creates a new ReportingCloud wrapper instance.
      *
-     * @param username
-     * @param password
-     * @param baseUri
+     * @param username The username.
+     * @param password The password.
+     * @param baseUrl The API base URL.
      */
-    public ReportingCloud(String username, String password, String baseUri) {
+    public ReportingCloud(String username, String password, String baseUrl) {
         _username = username;
         _password = password;
-        _baseUri = URI.create(baseUri);
+        _baseUrl = baseUrl;
+        // Remove possible slash at the end of base url
+        if (_baseUrl.endsWith("/")) _baseUrl = _baseUrl.substring(0, _baseUrl.length() - 2);
         _version = DEFAULT_VERSION;
-        _gson = new Gson();
+
+        // Register custom JSON deserializers and create json parser instance
+        GsonBuilder gb = new GsonBuilder();
+        gb.registerTypeAdapter(Template.class, new TemplateDeserializer());
+        gb.registerTypeAdapter(AccountSettings.class, new AccountSettingsDeserializer());
+        _gson = gb.create();
     }
 
     /**
+     * Creates a new ReportingCloud wrapper instance with the API base URL
+     * set to "http://api.reporting.cloud".
      *
-     * @param username
-     * @param password
+     * @param username The username.
+     * @param password The password.
      */
-    public  ReportingCloud(String username, String password) {
-        this(username, password, DEFAULT_BASE_URI);
+    public ReportingCloud(String username, String password) {
+        this(username, password, DEFAULT_BASE_URL);
     }
 
-    public int getTemplateCount(String templateName) throws IOException {
-        // ToDo: implement
-        String res = get("/templates/count");
-        return 0;
+    /**
+     * Returns the number of templates in the template storage.
+     *
+     * @return The number of templates in the template storage.
+     * @throws IOException
+     */
+    public int getTemplateCount() throws IllegalArgumentException, IOException {
+        String res = request(ReqType.GET, "/templates/count");
+        return Integer.parseInt(res);
     }
 
-    private String get(String endpoint) throws IOException {
-        return get(endpoint, null);
+    /**
+     * Gets the current user's account settings.
+     *
+     * @return The account settings.
+     */
+    public AccountSettings getAccountSettings() throws IllegalArgumentException, IOException {
+        String res = request(ReqType.GET, "/account/settings");
+        return _gson.fromJson(res, new TypeToken<AccountSettings>(){}.getType());
     }
 
-    private String get(String endpoint, HashMap<String, Object> params) throws IOException {
+    /**
+     * Lists all templates from the template storage.
+     *
+     * @return A list of Template objects.
+     * @throws Exception
+     */
+    public List<Template> listTemplates() throws IllegalArgumentException, IOException {
+        String res = request(ReqType.GET, "/templates/list");
+        return _gson.fromJson(res, new TypeToken<List<Template>>(){}.getType());
+    }
+
+    /**
+     * Returns the number of pages of a template in the template storage.
+     *
+     * @param templateName The filename of the template in the template
+     *                     storage to retrieve the number of pages for.
+     * @return The number of pages in the template.
+     */
+    public int getTemplatePageCount(String templateName) throws IllegalArgumentException, IOException {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("templateName", templateName);
+        String res = request(ReqType.GET, "/templates/pagecount", params);
+        return Integer.parseInt(res);
+    }
+
+    /**
+     * Converts a document to another format.
+     *
+     * @param templateData The source document encoded as a Base64 string.
+     *                     The supported document formats are .rtf, .doc, .docx,
+     *                     .html, .pdf and .tx.
+     * @param returnFormat The format of the created document.
+     * @return The created document encoded as a Base64 string.
+     * @throws Exception
+     */
+    public byte[] convertDocument(byte[] templateData, ReturnFormat returnFormat) throws IllegalArgumentException, IOException {
+        String dataB64 = Base64.getEncoder().encodeToString(templateData);
+        String retFmt;
+        switch (returnFormat) {
+            case PDF: retFmt = "pdf"; break;
+            case PDFA: retFmt = "pdfa"; break;
+            case DOC: retFmt = "doc"; break;
+            case DOCX: retFmt = "docx"; break;
+            case HMTL: retFmt = "html"; break;
+            case RTF: retFmt = "rtf"; break;
+            case TX: retFmt = "tx"; break;
+            default: throw new IllegalArgumentException("Unknown return format.");
+        }
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("returnFormat", retFmt);
+        String res = request(ReqType.POST, "/document/convert", params, "\"" + dataB64 + "\"");
+        res = res.substring(1, res.length() - 2);
+        return Base64.getDecoder().decode(res);
+    }
+
+    /**
+     * Possible HTTP request types
+     */
+    private enum ReqType {
+        GET, POST, DELETE
+    }
+
+    /**
+     * Performs a HTTP request of a given type.
+     * @param endpoint The endpoint (e. g. "/templates/list")
+     * @return The HTTP response body.
+     * @throws IOException
+     */
+    private String request(ReqType reqType, String endpoint) throws IllegalArgumentException, IOException {
+        return request(reqType, endpoint, null);
+    }
+
+    /**
+     * Performs a HTTP request of a given type.
+     * @param endpoint The endpoint (e. g. "/templates/list")
+     * @param params The query parameters.
+     * @return The HTTP response body.
+     * @throws IOException
+     */
+    private String request(ReqType reqType, String endpoint, HashMap<String, Object> params) throws IllegalArgumentException, IOException {
+        return request(reqType, endpoint, params, (String) null);
+    }
+
+    /**
+     * Performs a HTTP request of a given type.
+     * @param endpoint The endpoint (e. g. "/templates/list")
+     * @param params The query parameters.
+     * @param strBodyJson The request body as a JSON string.
+     * @return The HTTP response body.
+     * @throws IOException
+     */
+    private String request(ReqType reqType, String endpoint, HashMap<String, Object> params, String strBodyJson) throws IllegalArgumentException, IOException {
         String queryString = queryStringFromHashMap(params);
 
-        return "";
+        // DEBUG OUTPUT (ToDo: remove)
+        System.out.println("Query string: " + queryString);
+
+        // Get request type string
+        String strReq;
+        switch (reqType) {
+            case GET: strReq = "GET"; break;
+            case POST: strReq = "POST"; break;
+            case DELETE: strReq = "DELETE"; break;
+            default: throw new IllegalArgumentException();
+        }
+
+        // Create connection
+        String strUrl = _baseUrl + "/" + _version + endpoint + "/" + queryString;
+
+        // DEBUG OUTPUT (ToDo: remove)
+        System.out.println("URL: " + strUrl);
+
+        URL url = new URL(strUrl);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setDoOutput(true);
+        con.setRequestMethod(strReq);
+        con.setRequestProperty("User-Agent", USER_AGENT);
+        con.setConnectTimeout(DEFAULT_TIMEOUT * 1000);
+
+        // Basic Auth
+        byte[] authUTF8 = (_username + ":" + _password).getBytes("UTF-8");
+        String authEncoded = Base64.getEncoder().encodeToString(authUTF8);
+        con.setRequestProperty("Authorization", "Basic " + authEncoded);
+
+        // Add body content if necessary
+        if ((strBodyJson != null) && (strBodyJson.length() > 0)) {
+
+            // DEBUG OUTPUT (ToDo: remove)
+            System.out.println("Body: " + strBodyJson);
+
+            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            byte[] bodyUTF8 = strBodyJson.getBytes("UTF-8");
+            try (OutputStream os = con.getOutputStream()) {
+                os.write(bodyUTF8);
+            }
+        }
+
+        // Send request
+        StringBuilder result = new StringBuilder();
+        try {
+            try (InputStreamReader reader = new InputStreamReader(con.getInputStream())) {
+                try (BufferedReader in = new BufferedReader(reader)) {
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        result.append(line);
+                    }
+                }
+            }
+        }
+        catch (IOException exc) {
+            // Read error message and throw it
+            StringBuilder sb = new StringBuilder();
+            try (InputStreamReader reader = new InputStreamReader(con.getErrorStream())) {
+                try (BufferedReader in = new BufferedReader(reader)) {
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                    }
+                }
+            }
+            throw new IllegalArgumentException(sb.toString());
+        }
+
+        int responseCode = con.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) return result.toString();
+        else throw new IllegalArgumentException(result.toString());
     }
 
+    /**
+     * Performs a HTTP request of a given type.
+     * @param endpoint The endpoint (e. g. "/templates/list")
+     * @param params The query parameters.
+     * @param body The request body.
+     * @return The HTTP response body.
+     * @throws IOException
+     */
+    private String request(ReqType reqType, String endpoint, HashMap<String, Object> params, HashMap<String, Object> body) throws Exception {
+        String bodyJson = body == null ? "" : _gson.toJson(body);
+        return request(reqType, endpoint, params, bodyJson);
+    }
+
+    /**
+     * Generates a query string from a hash
+     */
     private static String queryStringFromHashMap(HashMap<String, Object> hashMap) {
         if (hashMap == null) return "";
-        List<String> params = new ArrayList<String>();
-        for (String key : hashMap.keySet()) {
-            params.add(key + "=" + hashMap.get(key).toString());
-        }
-        return String.join("&", params);
+        return "?" + hashMap.keySet().stream().map(k -> k + "=" + hashMap.get(k).toString()).collect(Collectors.joining("&"));
     }
 }
