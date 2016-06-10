@@ -20,13 +20,16 @@ public class ReportingCloudTest {
     private ReportingCloud _r;
     private byte[] _testDocData;
 
-    @Before
-    public void initialize() throws IOException {
-        _r = new ReportingCloud("<USERNAME>", "<PASSWORD>");
+    public ReportingCloudTest() throws IOException {
         Path currentRelPath = Paths.get("");
         String absPath = currentRelPath.toAbsolutePath().toString();
         String testDocPath = absPath + "\\src\\test\\resources\\__java_wrapper_test.tx";
         _testDocData = Files.readAllBytes(Paths.get(testDocPath));
+    }
+
+    @Before
+    public void initialize() throws IOException {
+        _r = new ReportingCloud("<USERNAME>", "<PASSWORD>");
     }
 
     @Test
@@ -97,6 +100,7 @@ public class ReportingCloudTest {
 
     @Test
     public void mergeDocument() throws Exception {
+        // Generate some dummy data:
         List<Object> md = new ArrayList<>();
         MasterItem row = new MasterItem("Will Ferrell", "Colin Farrell");
         row.item.add(new NestedItem(23, "An Item.", 234.56));
@@ -107,7 +111,7 @@ public class ReportingCloudTest {
         row.item.add(new NestedItem(45, "And another one.", 567.89));
         md.add(row);
 
-        // Create some dummy data
+        // Prepare merge settings and merge body objects
         MergeSettings ms = new MergeSettings();
         ms.setAuthor("John Doe");
         ms.setDocumentTitle("A document merged by Text Control ReportingCloud.");
