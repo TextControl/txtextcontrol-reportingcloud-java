@@ -16,6 +16,8 @@ package txtextcontrol.reportingcloud;
 
 /**
  * This enum lists all possible return formats for the Merge method.
+ *
+ * @author Thorsten Kummerow (@thomerow)
  */
 public enum ReturnFormat {
     /**

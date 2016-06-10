@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by thorsten on 09.06.2016.
+ * The ReportingCloud test class.
+ *
+ * @author Thorsten Kummerow (@thomerow)
  */
 public class ReportingCloudTest {
 

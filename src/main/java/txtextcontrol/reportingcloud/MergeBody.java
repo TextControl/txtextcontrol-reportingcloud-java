@@ -15,11 +15,12 @@
 package txtextcontrol.reportingcloud;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by thorsten on 10.06.2016.
+ * Used to pass data to the merge method.
+ *
+ * @author Thorsten Kummerow (@thomerow)
  */
 public class MergeBody {
 

@@ -17,7 +17,9 @@ package txtextcontrol.reportingcloud;
 import java.security.InvalidParameterException;
 
 /**
- * Created by thorsten on 10.06.2016.
+ * Internal method parameter validator class.
+ *
+ * @author Thorsten Kummerow (@thomerow)
  */
 public class TemplateDataValidator {
     public static void validate(byte[] templateData) {

@@ -16,6 +16,8 @@ package txtextcontrol.reportingcloud;
 
 /**
  * This enum lists all possible image formats for the thumbnails
+ *
+ * @author Thorsten Kummerow (@thomerow)
  */
 public enum ImageFormat {
 

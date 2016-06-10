@@ -26,16 +26,15 @@ import java.util.stream.Collectors;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.sun.deploy.net.HttpResponse;
-import com.sun.deploy.ui.ImageLoader;
 import txtextcontrol.reportingcloud.gson.AccountSettingsDeserializer;
 import txtextcontrol.reportingcloud.gson.MergeBodySerializer;
 import txtextcontrol.reportingcloud.gson.MergeSettingsSerializer;
 import txtextcontrol.reportingcloud.gson.TemplateDeserializer;
 
 /**
- * Created by thorsten on 09.06.2016.
- * The main Wrapper class
+ * The ReportingCloud API wrapper class.
+ *
+ * @author Thorsten Kummerow (@thomerow)
  */
 public class ReportingCloud {
 
@@ -515,7 +514,7 @@ public class ReportingCloud {
     }
 
     /**
-     * Generates a query string from a hash
+     * Generates a query string from a hash.
      */
     private static String queryStringFromHashMap(HashMap<String, Object> hashMap) {
         if (hashMap == null) return "";

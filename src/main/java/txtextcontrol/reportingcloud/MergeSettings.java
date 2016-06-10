@@ -15,7 +15,9 @@
 package txtextcontrol.reportingcloud;
 
 /**
- * Created by thorsten on 10.06.2016.
+ * Holds the merge settings needed by the merge method.
+ *
+ * @author Thorsten Kummerow
  */
 public class MergeSettings {
     private boolean _removeEmptyFields;

@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
+ * Holds information about a template in the template storage.
  *
  * @author Thorsten Kummerow (@thomerow)
  */

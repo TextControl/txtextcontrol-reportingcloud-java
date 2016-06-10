@@ -18,7 +18,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Created by thorsten on 10.06.2016.
+ * Represents ReportingCloud account settings.
+ *
+ * @author Thorsten Kummerow (@thomerow)
  */
 public class AccountSettings {
 
