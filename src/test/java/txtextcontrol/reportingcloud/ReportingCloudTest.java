@@ -1,6 +1,5 @@
 package txtextcontrol.reportingcloud;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
