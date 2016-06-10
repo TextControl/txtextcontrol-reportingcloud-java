@@ -129,6 +129,81 @@ public class ReportingCloud {
         return Integer.parseInt(res);
     }
 
+    public List<byte[]> getTemplateThumbnails(
+            String templateName, int zoomFactor, int fromPage,
+            int toPage, ImageFormat imageFormat) throws IllegalArgumentException, IOException {
+
+        TemplateNameValidator.validate(templateName);
+
+        // ToDo: implement
+
+        return new ArrayList<>();
+    }
+
+    /**
+     * Stores an uploaded template in the template storage (*.doc, *.docx, *.rtf and *.tx).
+     * @param templateName The filename of the template in the template storage. Existing
+     *                     files with the same filename will be overwritten.
+     * @param templateData Binary document data. The supported formats are DOC, DOCX, RTF
+     *                     and TX.
+     * @throws IllegalArgumentException
+     * @throws IOException
+     */
+    public void uploadTemplate(String templateName, byte[] templateData) throws IllegalArgumentException, IOException {
+        TemplateNameValidator.validate(templateName);
+
+        // ToDo: implement
+    }
+
+    /**
+     * Checks whether a template exists in the template storage.
+     *
+     * @param templateName The filename of the template to be checked for
+     *                     availability in the template storage.
+     * @return Returns if the template with the given name exists in the template
+     * storage.
+     */
+    public boolean templateExists(String templateName) {
+        TemplateNameValidator.validate(templateName);
+
+        // ToDo: implement
+
+        return false;
+    }
+
+    /**
+     * Returns the selected template from the storage.
+     *
+     * @param templateName The filename of the template in the template storage.
+     * @return The template document data.
+     */
+    public byte[] downloadTemplate(String templateName) {
+        TemplateNameValidator.validate(templateName);
+
+        // ToDo: implement
+
+        return new byte[0];
+    }
+
+    /**
+     * Deletes a template from the template storage.
+     *
+     * @param templateName The filename of the template to be deleted
+     *                     from the template storage.
+     * @throws IllegalArgumentException
+     * @throws IOException
+     */
+    public void deleteTemplate(String templateName) throws IllegalArgumentException, IOException {
+        TemplateNameValidator.validate(templateName);
+
+        // Prepare query parameter
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("templateName", templateName);
+
+        // Send request
+        request(ReqType.DELETE, "/templates/delete", params);
+    }
+
     /**
      * Converts a document to another format.
      *
@@ -139,7 +214,8 @@ public class ReportingCloud {
      * @return The created document encoded as a Base64 string.
      * @throws Exception
      */
-    public byte[] convertDocument(byte[] templateData, ReturnFormat returnFormat) throws IllegalArgumentException, IOException {
+    public byte[] convertDocument(byte[] templateData, ReturnFormat returnFormat)
+            throws IllegalArgumentException, IOException {
         String dataB64 = Base64.getEncoder().encodeToString(templateData);
 
         HashMap<String, Object> params = new HashMap<>();
@@ -172,7 +248,8 @@ public class ReportingCloud {
      * @throws IllegalArgumentException
      * @throws IOException
      */
-    public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName) throws IllegalArgumentException, IOException {
+    public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName)
+            throws IllegalArgumentException, IOException {
         return mergeDocument(mergeBody, templateName, ReturnFormat.PDF);
     }
 
@@ -188,7 +265,8 @@ public class ReportingCloud {
      * @throws IllegalArgumentException
      * @throws IOException
      */
-    public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName, ReturnFormat returnFormat) throws IllegalArgumentException, IOException {
+    public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName, ReturnFormat returnFormat)
+            throws IllegalArgumentException, IOException {
         return mergeDocument(mergeBody, templateName, returnFormat, false);
     }
 
@@ -206,7 +284,8 @@ public class ReportingCloud {
      * @throws IllegalArgumentException
      * @throws IOException
      */
-    public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName, ReturnFormat returnFormat, boolean append) throws IllegalArgumentException, IOException {
+    public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName, ReturnFormat returnFormat, boolean append)
+            throws IllegalArgumentException, IOException {
 
         // Parameter validation
         if ((mergeBody.getTemplate() != null) && (templateName != null)) {
@@ -256,7 +335,8 @@ public class ReportingCloud {
      * @return The HTTP response body.
      * @throws IOException
      */
-    private String request(ReqType reqType, String endpoint, HashMap<String, Object> params) throws IllegalArgumentException, IOException {
+    private String request(ReqType reqType, String endpoint, HashMap<String, Object> params)
+            throws IllegalArgumentException, IOException {
         return request(reqType, endpoint, params, (String) null);
     }
 
@@ -268,7 +348,8 @@ public class ReportingCloud {
      * @return The HTTP response body.
      * @throws IOException
      */
-    private String request(ReqType reqType, String endpoint, HashMap<String, Object> params, String strBodyJson) throws IllegalArgumentException, IOException {
+    private String request(ReqType reqType, String endpoint, HashMap<String, Object> params, String strBodyJson)
+            throws IllegalArgumentException, IOException {
         String queryString = queryStringFromHashMap(params);
 
         // DEBUG OUTPUT (ToDo: remove)

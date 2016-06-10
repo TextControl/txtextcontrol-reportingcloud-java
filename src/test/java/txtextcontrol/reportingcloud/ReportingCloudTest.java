@@ -48,7 +48,7 @@ public class ReportingCloudTest {
         List<Template> templates = _r.listTemplates();
         Assert.assertEquals(templates.size(), 2);
 
-        // ToDo: check if templates contain meaningful data
+        // ToDo: check if template list contains meaningful data
     }
 
     @Test
@@ -126,5 +126,17 @@ public class ReportingCloudTest {
         Assert.assertEquals(mergeResult.get(0)[1], 0x50);
         Assert.assertEquals(mergeResult.get(0)[2], 0x44);
         Assert.assertEquals(mergeResult.get(0)[3], 0x46);
+    }
+
+    @Test
+    public void uploadTemplate() throws Exception {
+        // ToDo: implement
+        Assert.assertTrue("NOT IMPLEMENTED YET", false);
+    }
+
+    @Test
+    public void deleteDocument() throws Exception {
+        // ToDo: implement
+        Assert.assertTrue("NOT IMPLEMENTED YET", false);
     }
 }
