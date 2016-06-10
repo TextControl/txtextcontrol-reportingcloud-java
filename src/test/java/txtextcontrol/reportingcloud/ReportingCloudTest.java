@@ -135,7 +135,25 @@ public class ReportingCloudTest {
     }
 
     @Test
-    public void deleteDocument() throws Exception {
+    public void templateExists() throws Exception {
+        // ToDo: implement
+        Assert.assertTrue("NOT IMPLEMENTED YET", false);
+    }
+
+    @Test
+    public void downloadTemplate() throws Exception {
+        // ToDo: implement
+        Assert.assertTrue("NOT IMPLEMENTED YET", false);
+    }
+
+    @Test
+    public void getTemplateThumbnails() throws Exception {
+        // ToDo: implement
+        Assert.assertTrue("NOT IMPLEMENTED YET", false);
+    }
+
+    @Test
+    public void deleteTemplate() throws Exception {
         // ToDo: implement
         Assert.assertTrue("NOT IMPLEMENTED YET", false);
     }

@@ -129,6 +129,61 @@ public class ReportingCloud {
         return Integer.parseInt(res);
     }
 
+    /**
+     * Returns a list of thumbnails of a specific template.
+     * @param templateName  The filename of the template in the template storage.
+     * @param zoomFactor An Integer value between +1+ and +400+ to set the percentage
+     *                   zoom factor of the created thumbnail images.
+     * @return An array of binary image data.
+     * @throws IllegalArgumentException
+     * @throws IOException
+     */
+    public List<byte[]> getTemplateThumbnails(String templateName, int zoomFactor) throws IllegalArgumentException, IOException {
+        return getTemplateThumbnails(templateName, zoomFactor, 1);
+    }
+
+    /**
+     * Returns a list of thumbnails of a specific template.
+     * @param templateName  The filename of the template in the template storage.
+     * @param zoomFactor An Integer value between +1+ and +400+ to set the percentage
+     *                   zoom factor of the created thumbnail images.
+     * @param fromPage  An Integer value that specifies the first page.
+     * @return An array of binary image data.
+     * @throws IllegalArgumentException
+     * @throws IOException
+     */
+    public List<byte[]> getTemplateThumbnails(String templateName, int zoomFactor, int fromPage) throws IllegalArgumentException, IOException {
+        return getTemplateThumbnails(templateName, zoomFactor, fromPage, 0);
+    }
+
+    /**
+     * Returns a list of thumbnails of a specific template.
+     * @param templateName  The filename of the template in the template storage.
+     * @param zoomFactor An Integer value between +1+ and +400+ to set the percentage
+     *                   zoom factor of the created thumbnail images.
+     * @param fromPage  An Integer value that specifies the first page.
+     * @param toPage An Integer value that specifies the last page.
+     * @return An array of binary image data.
+     * @throws IllegalArgumentException
+     * @throws IOException
+     */
+    public List<byte[]> getTemplateThumbnails(
+            String templateName, int zoomFactor, int fromPage, int toPage) throws IllegalArgumentException, IOException {
+        return getTemplateThumbnails(templateName, zoomFactor, fromPage, toPage, ImageFormat.PNG);
+    }
+
+    /**
+     * Returns a list of thumbnails of a specific template.
+     * @param templateName  The filename of the template in the template storage.
+     * @param zoomFactor An Integer value between +1+ and +400+ to set the percentage
+     *                   zoom factor of the created thumbnail images.
+     * @param fromPage  An Integer value that specifies the first page.
+     * @param toPage An Integer value that specifies the last page.
+     * @param imageFormat Defines the image format of the returned thumbnails.
+     * @return An array of binary image data.
+     * @throws IllegalArgumentException
+     * @throws IOException
+     */
     public List<byte[]> getTemplateThumbnails(
             String templateName, int zoomFactor, int fromPage,
             int toPage, ImageFormat imageFormat) throws IllegalArgumentException, IOException {
