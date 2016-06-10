@@ -1,5 +1,6 @@
 package txtextcontrol.reportingcloud;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -68,51 +68,46 @@ public class ReportingCloudTest {
         // ToDo: Assert more stuff
     }
 
+
+    // Classes needed by mergeDocument test:
+
+    public class NestedItem {
+        public int item_no;
+        public String item_description;
+        public double item_total;
+
+        public NestedItem(int item_no, String item_description, double item_total) {
+            this.item_no = item_no;
+            this.item_description = item_description;
+            this.item_total = item_total;
+        }
+    }
+
+    public class MasterItem {
+        public ArrayList<NestedItem> item;
+        public String recipient_name;
+        public String billto_name;
+
+        public MasterItem(String recipient_name, String billto_name) {
+            this.item = new ArrayList<NestedItem>();
+            this.recipient_name = recipient_name;
+            this.billto_name = billto_name;
+        }
+    }
+
     @Test
     public void mergeDocument() throws Exception {
         List<Object> md = new ArrayList<>();
+        MasterItem row = new MasterItem("Will Ferrell", "Colin Farrell");
+        row.item.add(new NestedItem(23, "An Item.", 234.56));
+        row.item.add(new NestedItem(34, "Another item.", 345.67));
+        md.add(row);
+        row = new MasterItem("Morgan Freeman", "Martin Freeman");
+        row.item.add(new NestedItem(45, "Yet another item.", 456.78));
+        row.item.add(new NestedItem(45, "And another one.", 567.89));
+        md.add(row);
 
         // Create some dummy data
-        HashMap<String, Object> item = new HashMap<>();
-        List<Object> nestedList = new ArrayList<>();
-        HashMap<String, Object> nestedItem = new HashMap<>();
-
-        nestedItem.put("item_no", 23);
-        nestedItem.put("item_description", "An Item.");
-        nestedItem.put("item_total", 234.56);
-        nestedList.add(nestedItem);
-
-        nestedItem = new HashMap<>();
-        nestedItem.put("item_no", 34);
-        nestedItem.put("item_description", "Another Item.");
-        nestedItem.put("item_total", 345.67);
-        nestedList.add(nestedItem);
-
-        item.put("billto_name", "Will Ferell");
-        item.put("recipient_name", "Colin Farrell");
-        item.put("item", nestedList);
-        md.add(item);
-
-        item = new HashMap<>();
-        nestedList = new ArrayList<>();
-        nestedItem = new HashMap<>();
-
-        nestedItem.put("item_no", 45);
-        nestedItem.put("item_description", "Yet another item.");
-        nestedItem.put("item_total", 567.89);
-        nestedList.add(nestedItem);
-
-        nestedItem = new HashMap<>();
-        nestedItem.put("item_no", 56);
-        nestedItem.put("item_description", "And another one.");
-        nestedItem.put("item_total", 678.90);
-        nestedList.add(nestedItem);
-
-        item.put("billto_name", "Morgan Freeman");
-        item.put("recipient_name", "Martin Freeman");
-        item.put("item", nestedList);
-        md.add(item);
-
         MergeSettings ms = new MergeSettings();
         ms.setAuthor("John Doe");
         ms.setDocumentTitle("A document merged by Text Control ReportingCloud.");

@@ -247,7 +247,7 @@ public class ReportingCloud {
         if ((strBodyJson != null) && (strBodyJson.length() > 0)) {
 
             // DEBUG OUTPUT (ToDo: remove)
-            // System.out.println("Body: " + strBodyJson);
+            System.out.println("Body: " + strBodyJson);
 
             con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             byte[] bodyUTF8 = strBodyJson.getBytes("UTF-8");
