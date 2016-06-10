@@ -14,8 +14,52 @@
  */
 package txtextcontrol.reportingcloud;
 
+import java.util.HashMap;
+
 /**
  * Created by thorsten on 10.06.2016.
  */
 public class MergeBody {
+
+    private byte[] _template;
+    private MergeSettings _mergeSettings;
+    private HashMap<String, Object> _mergeData;
+
+    public MergeBody(HashMap<String, Object> mergeData) {
+        this(mergeData, null);
+    }
+
+    public MergeBody(HashMap<String, Object> mergeData, MergeSettings mergeSettings) {
+        this(mergeData, mergeSettings, null);
+    }
+
+    public MergeBody(HashMap<String, Object> mergeData, MergeSettings mergeSettings, byte[] template) {
+        this._template = template;
+        this._mergeSettings = mergeSettings;
+        this._mergeData = mergeData;
+    }
+
+    public byte[] getTemplate() {
+        return _template;
+    }
+
+    public void setTemplate(byte[] template) {
+        this._template = template;
+    }
+
+    public MergeSettings getMergeSettings() {
+        return _mergeSettings;
+    }
+
+    public void setMergeSettings(MergeSettings mergeSettings) {
+        this._mergeSettings = mergeSettings;
+    }
+
+    public HashMap<String, Object> getMergeData() {
+        return _mergeData;
+    }
+
+    public void setMergeData(HashMap<String, Object> mergeData) {
+        this._mergeData = mergeData;
+    }
 }

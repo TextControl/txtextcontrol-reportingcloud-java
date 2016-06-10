@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created by thorsten on 09.06.2016.
@@ -62,6 +63,7 @@ public class ReportingCloud {
         GsonBuilder gb = new GsonBuilder();
         gb.registerTypeAdapter(Template.class, new TemplateDeserializer());
         gb.registerTypeAdapter(AccountSettings.class, new AccountSettingsDeserializer());
+        gb.registerTypeAdapter(MergeSettings.class, new MergeSettingsSerializer());
         _gson = gb.create();
     }
 
@@ -134,23 +136,49 @@ public class ReportingCloud {
      */
     public byte[] convertDocument(byte[] templateData, ReturnFormat returnFormat) throws IllegalArgumentException, IOException {
         String dataB64 = Base64.getEncoder().encodeToString(templateData);
-        String retFmt;
-        switch (returnFormat) {
-            case PDF: retFmt = "pdf"; break;
-            case PDFA: retFmt = "pdfa"; break;
-            case DOC: retFmt = "doc"; break;
-            case DOCX: retFmt = "docx"; break;
-            case HMTL: retFmt = "html"; break;
-            case RTF: retFmt = "rtf"; break;
-            case TX: retFmt = "tx"; break;
-            default: throw new IllegalArgumentException("Unknown return format.");
-        }
 
         HashMap<String, Object> params = new HashMap<>();
-        params.put("returnFormat", retFmt);
+        params.put("returnFormat", returnFormat.name());
         String res = request(ReqType.POST, "/document/convert", params, "\"" + dataB64 + "\"");
         res = res.substring(1, res.length() - 2);
         return Base64.getDecoder().decode(res);
+    }
+
+    public List<byte[]> mergeDocument(MergeBody mergeBody) throws IllegalArgumentException, IOException {
+        return mergeDocument(mergeBody, null);
+    }
+
+    public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName) throws IllegalArgumentException, IOException {
+        return mergeDocument(mergeBody, templateName, ReturnFormat.PDF);
+    }
+
+    public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName, ReturnFormat returnFormat) throws IllegalArgumentException, IOException {
+        return mergeDocument(mergeBody, templateName, returnFormat);
+    }
+
+    public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName, ReturnFormat returnFormat, boolean append) throws IllegalArgumentException, IOException {
+        // Parameter validation
+        if ((mergeBody.getTemplate() != null) && (templateName != null)) {
+            throw new IllegalArgumentException("Template name and template data must not be present at the same time.");
+        }
+        else if ((mergeBody.getTemplate() == null) && (templateName == null)) {
+            throw new IllegalArgumentException("Either a template name or template data must be present.");
+        }
+        // Create query parameters
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("returnFormat", returnFormat.name());
+        params.put("append", append);
+        if ((templateName != null) && (templateName.length() > 0)) {
+            params.put("templateName", templateName);
+        }
+
+        // Send request
+        String mergeBodyJson = _gson.toJson(mergeBody);
+        String res = request(ReqType.POST, "/document/merge", params, mergeBodyJson);
+
+        // Parse result
+        List<String> mergeResult = _gson.fromJson(res, new TypeToken<List<String>>(){}.getType());
+        return mergeResult.stream().map(d -> Base64.getDecoder().decode(d)).collect(Collectors.toList());
     }
 
     /**
@@ -195,15 +223,6 @@ public class ReportingCloud {
         // DEBUG OUTPUT (ToDo: remove)
         System.out.println("Query string: " + queryString);
 
-        // Get request type string
-        String strReq;
-        switch (reqType) {
-            case GET: strReq = "GET"; break;
-            case POST: strReq = "POST"; break;
-            case DELETE: strReq = "DELETE"; break;
-            default: throw new IllegalArgumentException();
-        }
-
         // Create connection
         String strUrl = _baseUrl + "/" + _version + endpoint + "/" + queryString;
 
@@ -213,7 +232,7 @@ public class ReportingCloud {
         URL url = new URL(strUrl);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setDoOutput(true);
-        con.setRequestMethod(strReq);
+        con.setRequestMethod(reqType.name());
         con.setRequestProperty("User-Agent", USER_AGENT);
         con.setConnectTimeout(DEFAULT_TIMEOUT * 1000);
 
@@ -264,19 +283,6 @@ public class ReportingCloud {
         int responseCode = con.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) return result.toString();
         else throw new IllegalArgumentException(result.toString());
-    }
-
-    /**
-     * Performs a HTTP request of a given type.
-     * @param endpoint The endpoint (e. g. "/templates/list")
-     * @param params The query parameters.
-     * @param body The request body.
-     * @return The HTTP response body.
-     * @throws IOException
-     */
-    private String request(ReqType reqType, String endpoint, HashMap<String, Object> params, HashMap<String, Object> body) throws Exception {
-        String bodyJson = body == null ? "" : _gson.toJson(body);
-        return request(reqType, endpoint, params, bodyJson);
     }
 
     /**
