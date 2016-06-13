@@ -9,3 +9,11 @@ This is the official Java wrapper for ReportingCloud, which is authored, maintai
 Before using ReportingCloud, please sign up to the service:
 
 [http://api.reporting.cloud](http://api.reporting.cloud)
+
+## API Documentation
+
+The API documentation for the ReportingCloud Java wrapper can be found [here](https://textcontrol.github.io/txtextcontrol-reportingcloud-java/).
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/TextControl/txtextcontrol-reportingcloud-ruby.
