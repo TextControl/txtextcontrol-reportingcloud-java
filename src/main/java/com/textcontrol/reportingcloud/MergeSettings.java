@@ -12,7 +12,7 @@
  *
  * Copyright: © 2016 Text Control GmbH
  */
-package txtextcontrol.reportingcloud;
+package com.textcontrol.reportingcloud;
 
 /**
  * Holds the merge settings needed by the merge method.

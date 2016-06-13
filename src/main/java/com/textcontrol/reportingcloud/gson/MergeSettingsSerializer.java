@@ -12,18 +12,18 @@
  *
  * Copyright: © 2016 Text Control GmbH
  */
-package txtextcontrol.reportingcloud.gson;
+package com.textcontrol.reportingcloud.gson;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import txtextcontrol.reportingcloud.MergeSettings;
+import com.textcontrol.reportingcloud.MergeSettings;
 
 import java.lang.reflect.Type;
 
 /**
- * Needed by GSON to serialize {@link txtextcontrol.reportingcloud.MergeSettings} objects to
+ * Needed by GSON to serialize {@link com.textcontrol.reportingcloud.MergeSettings} objects to
  * JSON.
  *
  * @author Thorsten Kummerow

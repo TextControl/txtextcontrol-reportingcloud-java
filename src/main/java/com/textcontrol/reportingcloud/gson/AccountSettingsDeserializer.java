@@ -12,15 +12,15 @@
  *
  * Copyright: © 2016 Text Control GmbH
  */
-package txtextcontrol.reportingcloud.gson;
+package com.textcontrol.reportingcloud.gson;
 
 import com.google.gson.*;
-import txtextcontrol.reportingcloud.AccountSettings;
+import com.textcontrol.reportingcloud.AccountSettings;
 
 import java.lang.reflect.Type;
 
 /**
- * Needed by GSON to create {@link txtextcontrol.reportingcloud.AccountSettings} objects from JSON data.
+ * Needed by GSON to create {@link com.textcontrol.reportingcloud.AccountSettings} objects from JSON data.
  *
  * @author Thorsten Kummerow
  */

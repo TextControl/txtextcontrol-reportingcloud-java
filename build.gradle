@@ -1,4 +1,4 @@
-group 'txtextcontrol.reportingcloud'
+group 'com.textcontrol.reportingcloud'
 version '1.0'
 
 apply plugin: 'java'

@@ -12,7 +12,7 @@
  *
  * Copyright: © 2016 Text Control GmbH 
  */
-package txtextcontrol.reportingcloud;
+package com.textcontrol.reportingcloud;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,10 +26,10 @@ import java.util.stream.Collectors;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import txtextcontrol.reportingcloud.gson.AccountSettingsDeserializer;
-import txtextcontrol.reportingcloud.gson.MergeBodySerializer;
-import txtextcontrol.reportingcloud.gson.MergeSettingsSerializer;
-import txtextcontrol.reportingcloud.gson.TemplateDeserializer;
+import com.textcontrol.reportingcloud.gson.AccountSettingsDeserializer;
+import com.textcontrol.reportingcloud.gson.MergeBodySerializer;
+import com.textcontrol.reportingcloud.gson.MergeSettingsSerializer;
+import com.textcontrol.reportingcloud.gson.TemplateDeserializer;
 
 /**
  * The ReportingCloud API wrapper class.

@@ -1,4 +1,4 @@
-package txtextcontrol.reportingcloud;
+package com.textcontrol.reportingcloud;
 
 import org.junit.Assert;
 import org.junit.Before;

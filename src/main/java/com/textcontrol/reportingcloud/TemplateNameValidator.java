@@ -12,7 +12,7 @@
  *
  * Copyright: © 2016 Text Control GmbH
  */
-package txtextcontrol.reportingcloud;
+package com.textcontrol.reportingcloud;
 
 import java.security.InvalidParameterException;
 
@@ -21,15 +21,15 @@ import java.security.InvalidParameterException;
  *
  * @author Thorsten Kummerow
  */
-public class TemplateDataValidator {
+public class TemplateNameValidator {
     /**
-     * Checks if a template data buffer contains something. Throws an exception if not.
+     * Checks if a template name contains something. Throws an exception if not.
      *
-     * @param templateData Template data.
+     * @param templateName The Template name.
      */
-    public static void validate(byte[] templateData) {
-        if ((templateData == null) || (templateData.length == 0)) {
-            throw new InvalidParameterException("No template data provided.");
+    public static void validate(String templateName) throws InvalidParameterException {
+        if ((templateName == null) || templateName.length() == 0) {
+            throw new InvalidParameterException("No template name given.");
         }
     }
 }
