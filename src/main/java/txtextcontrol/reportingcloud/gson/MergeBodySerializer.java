@@ -25,7 +25,7 @@ import java.util.Base64;
  * Needed by GSON to serialize {@link txtextcontrol.reportingcloud.MergeBody} objects to
  * JSON.
  *
- * @author Thorsten Kummerow (@thomerow)
+ * @author Thorsten Kummerow
  */
 public class MergeBodySerializer implements JsonSerializer<MergeBody> {
     @Override

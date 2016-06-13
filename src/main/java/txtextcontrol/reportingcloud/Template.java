@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * Holds information about a template in the template storage.
  *
- * @author Thorsten Kummerow (@thomerow)
+ * @author Thorsten Kummerow
  */
 public class Template {
 
@@ -28,23 +28,43 @@ public class Template {
     private LocalDateTime _modified;
     private int _size;
 
+    /**
+     * Creates a new Template instance.
+     * @param templateName The template file name.
+     * @param modified The date and time the template file was last modified (ISO 8601 date and
+     *                 time string).
+     * @param size The size of the template file in bytes.
+     */
     public Template(String templateName, String modified, int size) {
         this._templateName = templateName;
         this._modified = LocalDateTime.parse(modified, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         this._size = size;
     }
 
-
-
+    /**
+     * Gets the template file name.
+     *
+     * @return The template file name.
+     */
     public String getTemplateName() {
         return _templateName;
     }
 
-    public int getSize() {
-        return _size;
-    }
-
+    /**
+     * Gets the date and time the template file was last modified
+     *
+     * @return The modification date.
+     */
     public LocalDateTime getModified() {
         return _modified;
+    }
+
+    /**
+     * Gets the size of the template file in bytes.
+     *
+     * @return The template size.
+     */
+    public int getSize() {
+        return _size;
     }
 }

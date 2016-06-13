@@ -26,7 +26,7 @@ import java.lang.reflect.Type;
  * Needed by GSON to serialize {@link txtextcontrol.reportingcloud.MergeSettings} objects to
  * JSON.
  *
- * @author Thorsten Kummerow (@thomerow)
+ * @author Thorsten Kummerow
  */
 public class MergeSettingsSerializer implements JsonSerializer<MergeSettings> {
     @Override

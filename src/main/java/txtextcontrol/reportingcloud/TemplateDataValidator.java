@@ -19,9 +19,14 @@ import java.security.InvalidParameterException;
 /**
  * Internal method parameter validator class.
  *
- * @author Thorsten Kummerow (@thomerow)
+ * @author Thorsten Kummerow
  */
 public class TemplateDataValidator {
+    /**
+     * Checks if a template data buffer contains something. Throws an exception if not.
+     *
+     * @param templateData Template data.
+     */
     public static void validate(byte[] templateData) {
         if ((templateData == null) || (templateData.length == 0)) {
             throw new InvalidParameterException("No template data provided.");

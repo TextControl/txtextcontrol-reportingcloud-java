@@ -34,7 +34,7 @@ import txtextcontrol.reportingcloud.gson.TemplateDeserializer;
 /**
  * The ReportingCloud API wrapper class.
  *
- * @author Thorsten Kummerow (@thomerow)
+ * @author Thorsten Kummerow
  */
 public class ReportingCloud {
 
@@ -138,8 +138,9 @@ public class ReportingCloud {
 
     /**
      * Returns a list of thumbnails of a specific template.
+     *
      * @param templateName  The filename of the template in the template storage.
-     * @param zoomFactor An Integer value between 1 and 400 to set the percentage
+     * @param zoomFactor An Integer value between <tt>1</tt> and <tt>400</tt> to set the percentage
      *                   zoom factor of the created thumbnail images.
      * @return An array of binary image data.
      * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
@@ -151,8 +152,9 @@ public class ReportingCloud {
 
     /**
      * Returns a list of thumbnails of a specific template.
+     *
      * @param templateName  The filename of the template in the template storage.
-     * @param zoomFactor An Integer value between +1+ and +400+ to set the percentage
+     * @param zoomFactor An Integer value between <tt>1</tt> and <tt>400</tt> to set the percentage
      *                   zoom factor of the created thumbnail images.
      * @param fromPage  An Integer value that specifies the first page.
      * @return An array of binary image data.
@@ -165,8 +167,9 @@ public class ReportingCloud {
 
     /**
      * Returns a list of thumbnails of a specific template.
+     *
      * @param templateName  The filename of the template in the template storage.
-     * @param zoomFactor An Integer value between +1+ and +400+ to set the percentage
+     * @param zoomFactor An Integer value between <tt>1</tt> and <tt>400</tt> to set the percentage
      *                   zoom factor of the created thumbnail images.
      * @param fromPage  An Integer value that specifies the first page.
      * @param toPage An Integer value that specifies the last page.
@@ -181,8 +184,9 @@ public class ReportingCloud {
 
     /**
      * Returns a list of thumbnails of a specific template.
+     *
      * @param templateName  The filename of the template in the template storage.
-     * @param zoomFactor An Integer value between +1+ and +400+ to set the percentage
+     * @param zoomFactor An Integer value between <tt>1</tt> and <tt>400</tt> to set the percentage
      *                   zoom factor of the created thumbnail images.
      * @param fromPage  An Integer value that specifies the first page.
      * @param toPage An Integer value that specifies the last page.
@@ -216,11 +220,13 @@ public class ReportingCloud {
     }
 
     /**
-     * Stores an uploaded template in the template storage (*.doc, *.docx, *.rtf and *.tx).
+     * Stores an uploaded template in the template storage (<tt>.doc</tt>, <tt>.docx</tt>,
+     * <tt>.rtf</tt> and <tt>.tx</tt>).
+     *
      * @param templateName The filename of the template in the template storage. Existing
      *                     files with the same filename will be overwritten.
-     * @param templateData Binary document data. The supported formats are DOC, DOCX, RTF
-     *                     and TX.
+     * @param templateData Binary document data. The supported formats are <tt>.doc</tt>,
+     *                     <tt>.docx</tt>, <tt>.rtf</tt> and <tt>.tx</tt>.
      * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
      * @throws IOException If an I/O error occurs.
      */
@@ -311,8 +317,8 @@ public class ReportingCloud {
      * Converts a document to another format.
      *
      * @param templateData The source document encoded as a Base64 string.
-     *                     The supported document formats are .rtf, .doc, .docx,
-     *                     .html, .pdf and .tx.
+     *                     The supported document formats are <tt>.rtf</tt>, <tt>.doc</tt>,
+     *                     <tt>.docx</tt>, <tt>.html</tt>, <tt>.pdf</tt> and <tt>.tx</tt>.
      * @param returnFormat The format of the created document.
      * @return The created document encoded as a Base64 string.
      * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
@@ -339,7 +345,8 @@ public class ReportingCloud {
 
     /**
      * Merges and returns a template from the template storage or an uploaded template with JSON data.
-     * @param mergeBody The MergeBody object contains the datasource
+     *
+     * @param mergeBody The MergeBody object contains the data source
      *                  as a JSON data object and optionally, a template encoded as a Base64 string.
      * @return The response body contains an array of the created documents.
      * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
@@ -351,7 +358,8 @@ public class ReportingCloud {
 
     /**
      * Merges and returns a template from the template storage or an uploaded template with JSON data.
-     * @param mergeBody The MergeBody object contains the datasource
+     *
+     * @param mergeBody The MergeBody object contains the data source
      *                  as a JSON data object and optionally, a template encoded as a Base64 string.
      * @param templateName The name of the template in the template storage. If no template
      *                     name is specified, the template must be uploaded in the MergeBody
@@ -367,7 +375,8 @@ public class ReportingCloud {
 
     /**
      * Merges and returns a template from the template storage or an uploaded template with JSON data.
-     * @param mergeBody The MergeBody object contains the datasource
+     *
+     * @param mergeBody The MergeBody object contains the data source
      *                  as a JSON data object and optionally, a template encoded as a Base64 string.
      * @param templateName The name of the template in the template storage. If no template
      *                     name is specified, the template must be uploaded in the MergeBody
@@ -384,13 +393,14 @@ public class ReportingCloud {
 
     /**
      * Merges and returns a template from the template storage or an uploaded template with JSON data.
-     * @param mergeBody The MergeBody object contains the datasource
+     *
+     * @param mergeBody The MergeBody object contains the data source
      *                  as a JSON data object and optionally, a template encoded as a Base64 string.
      * @param templateName The name of the template in the template storage. If no template
      *                     name is specified, the template must be uploaded in the MergeBody
      *                     object of this request.
      * @param returnFormat The format of the created document.
-     * @param append Specifies whether the documents should be appened to one resulting
+     * @param append Specifies whether the documents should be appended to one resulting
      *               document when more than 1 data row is passed.
      * @return The response body contains an array of the created documents.
      * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
@@ -432,7 +442,8 @@ public class ReportingCloud {
 
     /**
      * Performs a HTTP request of a given type.
-     * @param endpoint The endpoint (e. g. "/templates/list")
+     *
+     * @param endpoint The endpoint (e. g. <tt>"/templates/list"</tt>)
      * @return The HTTP response body.
      * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
      * @throws IOException If an I/O error occurs.
@@ -443,7 +454,8 @@ public class ReportingCloud {
 
     /**
      * Performs a HTTP request of a given type.
-     * @param endpoint The endpoint (e. g. "/templates/list")
+     *
+     * @param endpoint The endpoint (e. g. <tt>"/templates/list"</tt>)
      * @param params The query parameters.
      * @return The HTTP response body.
      * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
@@ -456,7 +468,8 @@ public class ReportingCloud {
 
     /**
      * Performs a HTTP request of a given type.
-     * @param endpoint The endpoint (e. g. "/templates/list")
+     *
+     * @param endpoint The endpoint (e. g. <tt>"/templates/list"</tt>)
      * @param params The query parameters.
      * @param strBodyJson The request body as a JSON string.
      * @return The HTTP response body.

@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * Represents ReportingCloud account settings.
  *
- * @author Thorsten Kummerow (@thomerow)
+ * @author Thorsten Kummerow
  */
 public class AccountSettings {
 
@@ -40,26 +40,57 @@ public class AccountSettings {
         this._validUntil = LocalDateTime.parse(validUntil, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 
+    /**
+     * Gets the serial number that is attached to the
+     * account. Possible values are <tt>"FREE"</tt>, <tt>"TRIAL"</tt> and a 13 character long serial number.
+     *
+     * @return The serial number.
+     */
     public String getSerialNumber() {
         return _serialNumber;
     }
 
+    /**
+     * Gets the number of created documents in the current month.
+     *
+     * @return The number of created documents.
+     */
     public int getCreatedDocuments() {
         return _createdDocuments;
     }
 
+    /**
+     * Gets the number of uploaded templates to the template storage.
+     *
+     * @return The number of uploaded templates.
+     */
     public int getUploadedTemplates() {
         return _uploadedTemplates;
     }
 
+    /**
+     * Gets the maximum number of documents that can be created per month.
+     *
+     * @return The maximum number of documents.
+     */
     public int getMaxDocuments() {
         return _maxDocuments;
     }
 
+    /**
+     * Gets the maximum number of templates that can be uploaded to the template storage.
+     *
+     * @return The maximum number of templates.
+     */
     public int getMaxTemplates() {
         return _maxTemplates;
     }
 
+    /**
+     * Gets the date until the current subscription is valid. Can be nil.
+     *
+     * @return The date until the current subscription is valid.
+     */
     public LocalDateTime getValidUntil() {
         return _validUntil;
     }

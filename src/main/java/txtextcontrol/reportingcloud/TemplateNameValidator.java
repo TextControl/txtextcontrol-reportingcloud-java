@@ -19,9 +19,14 @@ import java.security.InvalidParameterException;
 /**
  * Internal method parameter validator class.
  *
- * @author Thorsten Kummerow (@thomerow)
+ * @author Thorsten Kummerow
  */
 public class TemplateNameValidator {
+    /**
+     * Checks if a template name contains something. Throws an exception if not.
+     *
+     * @param templateName The Template name.
+     */
     public static void validate(String templateName) throws InvalidParameterException {
         if ((templateName == null) || templateName.length() == 0) {
             throw new InvalidParameterException("No template name given.");

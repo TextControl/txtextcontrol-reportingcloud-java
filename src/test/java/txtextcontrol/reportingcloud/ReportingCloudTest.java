@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * The ReportingCloud test class.
  *
- * @author Thorsten Kummerow (@thomerow)
+ * @author Thorsten Kummerow
  */
 public class ReportingCloudTest {
 
