@@ -22,7 +22,10 @@ import java.lang.reflect.Type;
 import java.util.Base64;
 
 /**
- * Created by thorsten on 10.06.2016.
+ * Needed by GSON to serialize {@link txtextcontrol.reportingcloud.MergeBody} objects to
+ * JSON.
+ *
+ * @author Thorsten Kummerow (@thomerow)
  */
 public class MergeBodySerializer implements JsonSerializer<MergeBody> {
     @Override

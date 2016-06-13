@@ -20,7 +20,9 @@ import txtextcontrol.reportingcloud.Template;
 import java.lang.reflect.Type;
 
 /**
- * Created by thorsten on 10.06.2016.
+ * Needed by GSON to create {@link txtextcontrol.reportingcloud.Template} objects from JSON data.
+ *
+ * @author Thorsten Kummerow
  */
 public class TemplateDeserializer implements JsonDeserializer<Template> {
     @Override

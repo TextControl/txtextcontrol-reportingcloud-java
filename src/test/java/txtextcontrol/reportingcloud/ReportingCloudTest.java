@@ -33,20 +33,20 @@ public class ReportingCloudTest {
 
     @Before
     public void initialize() throws IOException {
-        // ToDo: Fill in your ReportingCloud credentials here
+        // ToDo: Fill in your ReportingCloud credentials here.
         _r = new ReportingCloud("<USERNAME>", "<PASSWORD>");
     }
 
     @Test
     public void getTemplateCount() throws Exception {
-        // ToDo: adapt the following to your own template storage
+        // ToDo: Adapt the following to your own template storage.
         int nCount = _r.getTemplateCount();
         Assert.assertEquals(2, nCount);
     }
 
     @Test
     public void getTemplatePageCount() throws Exception {
-        // ToDo: adapt the following to your own template storage
+        // ToDo: Adapt the following to your own template storage.
         int nPages = _r.getTemplatePageCount("new_template.docx");
         Assert.assertEquals(2, nPages);
     }
@@ -56,7 +56,7 @@ public class ReportingCloudTest {
         List<Template> templates = _r.listTemplates();
         Assert.assertEquals(2, templates.size());
 
-        // ToDo: adapt the following to your own template storage
+        // ToDo: Adapt the following to your own template storage.
         Assert.assertEquals("sample_invoice.tx", templates.get(1).getTemplateName());
         Assert.assertEquals(34845, templates.get(1).getSize());
         Assert.assertEquals(LocalDateTime.parse("2016-05-24T15:24:57"), templates.get(1).getModified());
@@ -75,7 +75,7 @@ public class ReportingCloudTest {
 
     @Test
     public void getAccountSettings() throws Exception {
-        // ToDo: adapt the following to your own account details
+        // ToDo: Adapt the following to your own account details.
         AccountSettings as = _r.getAccountSettings();
         Assert.assertEquals(13, as.getSerialNumber().length());
         Assert.assertEquals(LocalDateTime.parse("2020-01-01T00:00"), as.getValidUntil());

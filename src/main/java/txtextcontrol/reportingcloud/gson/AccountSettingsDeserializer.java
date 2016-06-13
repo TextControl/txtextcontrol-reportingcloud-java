@@ -20,12 +20,15 @@ import txtextcontrol.reportingcloud.AccountSettings;
 import java.lang.reflect.Type;
 
 /**
- * Created by thorsten on 10.06.2016.
+ * Needed by GSON to create {@link txtextcontrol.reportingcloud.AccountSettings} objects from JSON data.
+ *
+ * @author Thorsten Kummerow
  */
 public class AccountSettingsDeserializer implements JsonDeserializer<AccountSettings> {
     @Override
     public AccountSettings deserialize(JsonElement json, Type typeOfT,
                                        JsonDeserializationContext context) throws JsonParseException {
+
         JsonObject jsonObj = json.getAsJsonObject();
         return new AccountSettings(
             jsonObj.get("serialNumber").getAsString(),

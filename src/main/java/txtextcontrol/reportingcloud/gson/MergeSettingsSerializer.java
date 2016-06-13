@@ -23,7 +23,10 @@ import txtextcontrol.reportingcloud.MergeSettings;
 import java.lang.reflect.Type;
 
 /**
- * Created by thorsten on 10.06.2016.
+ * Needed by GSON to serialize {@link txtextcontrol.reportingcloud.MergeSettings} objects to
+ * JSON.
+ *
+ * @author Thorsten Kummerow (@thomerow)
  */
 public class MergeSettingsSerializer implements JsonSerializer<MergeSettings> {
     @Override

@@ -88,7 +88,8 @@ public class ReportingCloud {
      * Returns the number of templates in the template storage.
      *
      * @return The number of templates in the template storage.
-     * @throws IOException
+     * @throws IOException If an I/O error occurs.
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
      */
     public int getTemplateCount() throws IllegalArgumentException, IOException {
         String res = request(ReqType.GET, "/templates/count");
@@ -99,6 +100,8 @@ public class ReportingCloud {
      * Gets the current user's account settings.
      *
      * @return The account settings.
+     * @throws IOException If an I/O error occurs.
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
      */
     public AccountSettings getAccountSettings() throws IllegalArgumentException, IOException {
         String res = request(ReqType.GET, "/account/settings");
@@ -109,7 +112,8 @@ public class ReportingCloud {
      * Lists all templates from the template storage.
      *
      * @return A list of Template objects.
-     * @throws Exception
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public List<Template> listTemplates() throws IllegalArgumentException, IOException {
         String res = request(ReqType.GET, "/templates/list");
@@ -122,6 +126,8 @@ public class ReportingCloud {
      * @param templateName The filename of the template in the template
      *                     storage to retrieve the number of pages for.
      * @return The number of pages in the template.
+     * @throws IOException If an I/O error occurs.
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
      */
     public int getTemplatePageCount(String templateName) throws IllegalArgumentException, IOException {
         HashMap<String, Object> params = new HashMap<>();
@@ -136,8 +142,8 @@ public class ReportingCloud {
      * @param zoomFactor An Integer value between 1 and 400 to set the percentage
      *                   zoom factor of the created thumbnail images.
      * @return An array of binary image data.
-     * @throws IllegalArgumentException
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public List<byte[]> getTemplateThumbnails(String templateName, int zoomFactor) throws IllegalArgumentException, IOException {
         return getTemplateThumbnails(templateName, zoomFactor, 1);
@@ -150,8 +156,8 @@ public class ReportingCloud {
      *                   zoom factor of the created thumbnail images.
      * @param fromPage  An Integer value that specifies the first page.
      * @return An array of binary image data.
-     * @throws IllegalArgumentException
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public List<byte[]> getTemplateThumbnails(String templateName, int zoomFactor, int fromPage) throws IllegalArgumentException, IOException {
         return getTemplateThumbnails(templateName, zoomFactor, fromPage, 0);
@@ -165,8 +171,8 @@ public class ReportingCloud {
      * @param fromPage  An Integer value that specifies the first page.
      * @param toPage An Integer value that specifies the last page.
      * @return An array of binary image data.
-     * @throws IllegalArgumentException
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public List<byte[]> getTemplateThumbnails(
             String templateName, int zoomFactor, int fromPage, int toPage) throws IllegalArgumentException, IOException {
@@ -182,8 +188,8 @@ public class ReportingCloud {
      * @param toPage An Integer value that specifies the last page.
      * @param imageFormat Defines the image format of the returned thumbnails.
      * @return An array of binary image data.
-     * @throws IllegalArgumentException
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public List<byte[]> getTemplateThumbnails(
             String templateName, int zoomFactor, int fromPage,
@@ -215,8 +221,8 @@ public class ReportingCloud {
      *                     files with the same filename will be overwritten.
      * @param templateData Binary document data. The supported formats are DOC, DOCX, RTF
      *                     and TX.
-     * @throws IllegalArgumentException
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public void uploadTemplate(String templateName, byte[] templateData) throws IllegalArgumentException, IOException {
         TemplateNameValidator.validate(templateName);
@@ -240,6 +246,8 @@ public class ReportingCloud {
      *                     availability in the template storage.
      * @return Returns if the template with the given name exists in the template
      * storage.
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public boolean templateExists(String templateName) throws IllegalArgumentException, IOException {
         TemplateNameValidator.validate(templateName);
@@ -262,6 +270,8 @@ public class ReportingCloud {
      *
      * @param templateName The filename of the template in the template storage.
      * @return The template document data.
+     * @throws IOException If an I/O error occurs.
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
      */
     public byte[] downloadTemplate(String templateName) throws IllegalArgumentException, IOException {
         TemplateNameValidator.validate(templateName);
@@ -283,8 +293,8 @@ public class ReportingCloud {
      *
      * @param templateName The filename of the template to be deleted
      *                     from the template storage.
-     * @throws IllegalArgumentException
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public void deleteTemplate(String templateName) throws IllegalArgumentException, IOException {
         TemplateNameValidator.validate(templateName);
@@ -305,7 +315,8 @@ public class ReportingCloud {
      *                     .html, .pdf and .tx.
      * @param returnFormat The format of the created document.
      * @return The created document encoded as a Base64 string.
-     * @throws Exception
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public byte[] convertDocument(byte[] templateData, ReturnFormat returnFormat)
             throws IllegalArgumentException, IOException {
@@ -331,8 +342,8 @@ public class ReportingCloud {
      * @param mergeBody The MergeBody object contains the datasource
      *                  as a JSON data object and optionally, a template encoded as a Base64 string.
      * @return The response body contains an array of the created documents.
-     * @throws IllegalArgumentException
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public List<byte[]> mergeDocument(MergeBody mergeBody) throws IllegalArgumentException, IOException {
         return mergeDocument(mergeBody, null);
@@ -346,8 +357,8 @@ public class ReportingCloud {
      *                     name is specified, the template must be uploaded in the MergeBody
      *                     object of this request.
      * @return The response body contains an array of the created documents.
-     * @throws IllegalArgumentException
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName)
             throws IllegalArgumentException, IOException {
@@ -363,8 +374,8 @@ public class ReportingCloud {
      *                     object of this request.
      * @param returnFormat The format of the created document.
      * @return The response body contains an array of the created documents.
-     * @throws IllegalArgumentException
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName, ReturnFormat returnFormat)
             throws IllegalArgumentException, IOException {
@@ -382,8 +393,8 @@ public class ReportingCloud {
      * @param append Specifies whether the documents should be appened to one resulting
      *               document when more than 1 data row is passed.
      * @return The response body contains an array of the created documents.
-     * @throws IllegalArgumentException
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName, ReturnFormat returnFormat, boolean append)
             throws IllegalArgumentException, IOException {
@@ -423,7 +434,8 @@ public class ReportingCloud {
      * Performs a HTTP request of a given type.
      * @param endpoint The endpoint (e. g. "/templates/list")
      * @return The HTTP response body.
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     private String request(ReqType reqType, String endpoint) throws IllegalArgumentException, IOException {
         return request(reqType, endpoint, null);
@@ -434,7 +446,8 @@ public class ReportingCloud {
      * @param endpoint The endpoint (e. g. "/templates/list")
      * @param params The query parameters.
      * @return The HTTP response body.
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     private String request(ReqType reqType, String endpoint, HashMap<String, Object> params)
             throws IllegalArgumentException, IOException {
@@ -447,7 +460,8 @@ public class ReportingCloud {
      * @param params The query parameters.
      * @param strBodyJson The request body as a JSON string.
      * @return The HTTP response body.
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     private String request(ReqType reqType, String endpoint, HashMap<String, Object> params, String strBodyJson)
             throws IllegalArgumentException, IOException {
