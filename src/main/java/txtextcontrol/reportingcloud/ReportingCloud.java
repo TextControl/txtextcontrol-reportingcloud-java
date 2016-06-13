@@ -75,7 +75,7 @@ public class ReportingCloud {
 
     /**
      * Creates a new ReportingCloud wrapper instance with the API base URL
-     * set to "http://api.reporting.cloud".
+     * set to <tt>"http://api.reporting.cloud"</tt>.
      *
      * @param username The username.
      * @param password The password.
