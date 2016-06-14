@@ -10,8 +10,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
-import static org.junit.Assert.*;
-
 /**
  * AccountSettingsDeserializer test class.
  *

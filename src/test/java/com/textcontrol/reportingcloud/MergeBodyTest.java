@@ -5,8 +5,6 @@ import org.junit.Test;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
-
 /**
  * The MergeBody test class.
  *

@@ -6,13 +6,9 @@ import com.textcontrol.reportingcloud.MergeSettings;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-
-import static org.junit.Assert.*;
 
 /**
  * MergeBodySerializer test class.

@@ -2,15 +2,12 @@ package com.textcontrol.reportingcloud.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.textcontrol.reportingcloud.AccountSettings;
 import com.textcontrol.reportingcloud.Template;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.ZonedDateTime;
 import java.util.HashMap;
-
-import static org.junit.Assert.*;
 
 /**
  * TemplateDeserializer test class.

@@ -6,8 +6,6 @@ import java.time.format.DateTimeFormatter;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * The AccountSettings test class.
  *
