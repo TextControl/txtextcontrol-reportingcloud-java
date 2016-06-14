@@ -111,7 +111,7 @@ public class ReportingCloudTest {
     }
 
     @Test
-    public void mergeDocument() throws Exception {
+    public void mergeDocument_usingIterable() throws Exception {
         // Generate some dummy data:
         List<Object> md = new ArrayList<>();
         MasterItem row = new MasterItem("Will Ferrell", "Colin Farrell");
@@ -122,6 +122,36 @@ public class ReportingCloudTest {
         row.item.add(new NestedItem(45, "Yet another item.", 456.78));
         row.item.add(new NestedItem(45, "And another one.", 567.89));
         md.add(row);
+
+        // Prepare merge settings and merge body objects
+        MergeSettings ms = new MergeSettings();
+        ms.setAuthor("John Doe");
+        ms.setDocumentTitle("A document merged by Text Control ReportingCloud.");
+        MergeBody mb = new MergeBody(md, ms);
+
+        // Merge the document
+        List<byte[]> mergeResult = _r.mergeDocument(mb, "sample_invoice.tx");
+
+        Assert.assertEquals(2, mergeResult.size());
+
+        // Check for PDF magic number
+        Assert.assertEquals(0x25, mergeResult.get(0)[0]);
+        Assert.assertEquals(0x50, mergeResult.get(0)[1]);
+        Assert.assertEquals(0x44, mergeResult.get(0)[2]);
+        Assert.assertEquals(0x46, mergeResult.get(0)[3]);
+    }
+
+    @Test
+    public void mergeDocument_usingArray() throws Exception {
+        // Generate some dummy data:
+        MasterItem[] md = {
+                new MasterItem("Will Ferrell", "Colin Farrell"),
+                new MasterItem("Morgan Freeman", "Martin Freeman")
+        };
+        md[0].item.add(new NestedItem(23, "An Item.", 234.56));
+        md[0].item.add(new NestedItem(34, "Another item.", 345.67));
+        md[1].item.add(new NestedItem(45, "Yet another item.", 456.78));
+        md[1].item.add(new NestedItem(45, "And another one.", 567.89));
 
         // Prepare merge settings and merge body objects
         MergeSettings ms = new MergeSettings();

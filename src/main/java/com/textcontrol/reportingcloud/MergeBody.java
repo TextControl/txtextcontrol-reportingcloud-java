@@ -15,7 +15,7 @@
 package com.textcontrol.reportingcloud;
 
 import java.security.InvalidParameterException;
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * Used to pass data to the merge method.
@@ -26,35 +26,53 @@ public class MergeBody {
 
     private byte[] _template;
     private MergeSettings _mergeSettings;
-    private List<Object> _mergeData;
+    private Iterable<Object> _mergeData;
 
     /**
-     * @param mergeData The merge data. Can be a list of {@link java.util.HashMap} objects or a list of objects
-     * which can be serialized to JSON by GSON.
+     * @param mergeData The merge data. Can be an iterable type of {@link java.util.HashMap} objects
+     *                  or an iterable type of objects which can be serialized to JSON by GSON.
      */
-    public MergeBody(List<Object> mergeData) throws InvalidParameterException {
+    public MergeBody(Iterable<Object> mergeData) throws InvalidParameterException {
         this(mergeData, null);
     }
 
     /**
-     * @param mergeData The merge data. Can be a list of {@link java.util.HashMap} objects or
-     *                  a list of objects which can be serialized to JSON by GSON.
+     * @param mergeData The merge data. Can be an array of {@link java.util.HashMap} objects
+     *                  or an array of objects which can be serialized to JSON by GSON.
+     */
+    public MergeBody(Object[] mergeData) throws InvalidParameterException {
+        this(mergeData, null);
+    }
+
+    /**
+     * @param mergeData The merge data. Can be an iterable type of {@link java.util.HashMap} objects
+     *                  or an iterable type of objects which can be serialized to JSON by GSON.
      * @param mergeSettings Merge settings to specify merge properties and document properties
      *                      such as title and author.
      */
-    public MergeBody(List<Object> mergeData, MergeSettings mergeSettings) throws InvalidParameterException {
+    public MergeBody(Iterable<Object> mergeData, MergeSettings mergeSettings) throws InvalidParameterException {
         this(mergeData, mergeSettings, null);
     }
 
     /**
-     * @param mergeData The merge data. Can be a list of {@link java.util.HashMap} objects or
-     *                  a list of objects which can be serialized to JSON by GSON.
+     * @param mergeData The merge data. Can be an array of {@link java.util.HashMap} objects
+     *                  or an array of objects which can be serialized to JSON by GSON.
+     * @param mergeSettings Merge settings to specify merge properties and document properties
+     *                      such as title and author.
+     */
+    public MergeBody(Object[] mergeData, MergeSettings mergeSettings) throws InvalidParameterException {
+        this(mergeData, mergeSettings, null);
+    }
+
+    /**
+     * @param mergeData The merge data. Can be an iterable type of {@link java.util.HashMap} objects
+     *                  or an iterable type of objects which can be serialized to JSON by GSON.
      * @param mergeSettings Merge settings to specify merge properties and document properties
      *                      such as title and author.
      * @param template The binary template document data. Supported formats are <tt>.rtf</tt>,
      *                 <tt>.doc</tt>, <tt>.docx</tt> and <tt>.tx</tt>.
      */
-    public MergeBody(List<Object> mergeData, MergeSettings mergeSettings, byte[] template) throws InvalidParameterException {
+    public MergeBody(Iterable<Object> mergeData, MergeSettings mergeSettings, byte[] template) throws InvalidParameterException {
         if (mergeData == null) {
             throw new InvalidParameterException("mergeData must not be null.");
         }
@@ -62,6 +80,18 @@ public class MergeBody {
         this._template = template;
         this._mergeSettings = mergeSettings;
         this._mergeData = mergeData;
+    }
+
+    /**
+     * @param mergeData The merge data. Can be an array of {@link java.util.HashMap} objects
+     *                  or an array of objects which can be serialized to JSON by GSON.
+     * @param mergeSettings Merge settings to specify merge properties and document properties
+     *                      such as title and author.
+     * @param template The binary template document data. Supported formats are <tt>.rtf</tt>,
+     *                 <tt>.doc</tt>, <tt>.docx</tt> and <tt>.tx</tt>.
+     */
+    public MergeBody(Object[] mergeData, MergeSettings mergeSettings, byte[] template) throws InvalidParameterException {
+        this(Arrays.asList(mergeData), mergeSettings, template);
     }
 
     /**
@@ -109,7 +139,7 @@ public class MergeBody {
      *
      * @return The merge data.
      */
-    public List<Object> getMergeData() {
+    public Iterable<Object> getMergeData() {
         return _mergeData;
     }
 
@@ -119,7 +149,7 @@ public class MergeBody {
      *
      * @param mergeData The merge data.
      */
-    public void setMergeData(List<Object> mergeData) {
+    public void setMergeData(Iterable<Object> mergeData) {
         this._mergeData = mergeData;
     }
 }
