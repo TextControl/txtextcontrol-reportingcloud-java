@@ -27,7 +27,7 @@ public class TemplateDataValidator {
      *
      * @param templateData Template data.
      */
-    public static void validate(byte[] templateData) {
+    public static void validate(byte[] templateData) throws InvalidParameterException {
         if ((templateData == null) || (templateData.length == 0)) {
             throw new InvalidParameterException("No template data provided.");
         }
