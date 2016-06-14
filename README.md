@@ -16,4 +16,4 @@ The API documentation for the ReportingCloud Java wrapper can be found [here](ht
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/TextControl/txtextcontrol-reportingcloud-ruby.
+Bug reports and pull requests are welcome on GitHub at https://github.com/TextControl/txtextcontrol-reportingcloud-java.
