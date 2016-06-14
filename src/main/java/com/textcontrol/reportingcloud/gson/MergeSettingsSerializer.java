@@ -21,6 +21,8 @@ import com.google.gson.JsonSerializer;
 import com.textcontrol.reportingcloud.MergeSettings;
 
 import java.lang.reflect.Type;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Needed by GSON to serialize {@link com.textcontrol.reportingcloud.MergeSettings} objects to
@@ -41,6 +43,12 @@ public class MergeSettingsSerializer implements JsonSerializer<MergeSettings> {
         result.addProperty("documentSubject", src.getDocumentSubject());
         result.addProperty("documentTitle", src.getdocumentTitle());
         result.addProperty("userPassword", src.getUserPassword());
+        ZonedDateTime lastModDate = src.getLastModificationDate();
+        String strLastModDate = lastModDate == null ? null : lastModDate.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        result.addProperty("lastModificationDate", strLastModDate);
+        ZonedDateTime creationDate = src.getCreationDate();
+        String strCreationDate = creationDate == null ? null : creationDate.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        result.addProperty("creationDate", strCreationDate);
         return result;
     }
 }

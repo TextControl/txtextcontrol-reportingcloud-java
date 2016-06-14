@@ -14,6 +14,10 @@
  */
 package com.textcontrol.reportingcloud;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 /**
  * Holds the merge settings needed by the merge method.
  *
@@ -29,6 +33,8 @@ public class MergeSettings {
     private String _documentSubject;
     private String _documentTitle;
     private String _userPassword;
+    private ZonedDateTime _lastModificationDate;
+    private ZonedDateTime _creationDate;
 
     public MergeSettings() {
         this._removeEmptyFields = true;
@@ -40,6 +46,8 @@ public class MergeSettings {
         this._documentSubject = null;
         this._documentTitle = null;
         this._userPassword = null;
+        this._lastModificationDate = null;
+        this._creationDate = null;
     }
 
     /**
@@ -209,5 +217,63 @@ public class MergeSettings {
      */
     public void setUserPassword(String userPassword) {
         this._userPassword = userPassword;
+    }
+
+    /**
+     * Gets the creation date.
+     *
+     * @return The creation date.
+     */
+    public ZonedDateTime getCreationDate() {
+        return _creationDate;
+    }
+
+    /**
+     * Sets the creation date.
+     *
+     * @param creationDate The creation date (ISO-8601 extended offset date-time format).
+     *                     Can be null.
+     */
+    public void setCreationDate(String creationDate) throws DateTimeParseException {
+        if (creationDate == null) _creationDate = null;
+        else _creationDate = ZonedDateTime.parse(creationDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+    }
+
+    /**
+     * Sets the creation date.
+     *
+     * @param creationDate The creation date. Can be null.
+     */
+    public void setCreationDate(ZonedDateTime creationDate) {
+        _creationDate = creationDate;
+    }
+
+    /**
+     * Gets the last modification date.
+     *
+     * @return The last modification date.
+     */
+    public ZonedDateTime getLastModificationDate() {
+        return _lastModificationDate;
+    }
+
+    /**
+     * Sets the last modification date.
+     *
+     * @param lastModificationDate The last modification date (ISO-8601 extended offset date-time format).
+     *                             Can be null.
+     */
+    public void setLastModificationDate(String lastModificationDate) throws DateTimeParseException {
+        if (lastModificationDate == null) _lastModificationDate = null;
+        else _lastModificationDate = ZonedDateTime.parse(lastModificationDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+    }
+
+    /**
+     * Sets the last modification date.
+     *
+     * @param lastModificationDate The last modification date. Can be null.
+     */
+    public void setLastModificationDate(ZonedDateTime lastModificationDate) {
+        _lastModificationDate = lastModificationDate;
     }
 }

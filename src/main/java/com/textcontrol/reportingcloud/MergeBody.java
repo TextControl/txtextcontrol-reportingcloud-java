@@ -73,13 +73,9 @@ public class MergeBody {
      *                 <tt>.doc</tt>, <tt>.docx</tt> and <tt>.tx</tt>.
      */
     public MergeBody(Iterable<Object> mergeData, MergeSettings mergeSettings, byte[] template) throws InvalidParameterException {
-        if (mergeData == null) {
-            throw new InvalidParameterException("mergeData must not be null.");
-        }
-
         this._template = template;
         this._mergeSettings = mergeSettings;
-        this._mergeData = mergeData;
+        this.setMergeData(mergeData);
     }
 
     /**
@@ -144,12 +140,31 @@ public class MergeBody {
     }
 
     /**
-     * Sets the merge data. Can be a list of {@link java.util.HashMap} objects or a list of objects
+     * Sets the merge data. Can be an iterable type of {@link java.util.HashMap} objects or an
+     * iterable type of objects which can be serialized to JSON by GSON.
+     *
+     * @param mergeData The merge data.
+     */
+    public void setMergeData(Iterable<Object> mergeData) throws InvalidParameterException {
+        if (mergeData == null) {
+            throw new InvalidParameterException("mergeData must not be null.");
+        }
+        this._mergeData = mergeData;
+    }
+
+    /**
+     * Sets the merge data. Can be an array of {@link java.util.HashMap} objects or an array of objects
      * which can be serialized to JSON by GSON.
      *
      * @param mergeData The merge data.
      */
-    public void setMergeData(Iterable<Object> mergeData) {
-        this._mergeData = mergeData;
+    public void setMergeData(Object[] mergeData) throws InvalidParameterException {
+        if (mergeData == null) {
+            throw new InvalidParameterException("mergeData must not be null.");
+        }
+        if (mergeData.length == 0) {
+            throw new InvalidParameterException("mergeData must not be empty.");
+        }
+        this._mergeData = Arrays.asList(mergeData);
     }
 }

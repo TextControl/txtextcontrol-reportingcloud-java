@@ -14,7 +14,7 @@
  */
 package com.textcontrol.reportingcloud;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -25,7 +25,7 @@ import java.time.format.DateTimeFormatter;
 public class Template {
 
     private String _templateName;
-    private LocalDateTime _modified;
+    private ZonedDateTime _modified;
     private int _size;
 
     /**
@@ -37,7 +37,7 @@ public class Template {
      */
     public Template(String templateName, String modified, int size) {
         this._templateName = templateName;
-        this._modified = LocalDateTime.parse(modified, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        this._modified = ZonedDateTime.parse(modified, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         this._size = size;
     }
 
@@ -55,7 +55,7 @@ public class Template {
      *
      * @return The modification date.
      */
-    public LocalDateTime getModified() {
+    public ZonedDateTime getModified() {
         return _modified;
     }
 

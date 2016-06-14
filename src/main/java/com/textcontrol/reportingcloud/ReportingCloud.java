@@ -105,7 +105,7 @@ public class ReportingCloud {
      */
     public AccountSettings getAccountSettings() throws IllegalArgumentException, IOException {
         String res = request(ReqType.GET, "/account/settings");
-        return _gson.fromJson(res, new TypeToken<AccountSettings>(){}.getType());
+        return _gson.fromJson(res, AccountSettings.class);
     }
 
     /**

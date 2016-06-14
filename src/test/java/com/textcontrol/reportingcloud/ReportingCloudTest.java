@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +59,7 @@ public class ReportingCloudTest {
         // ToDo: Adapt the following to your own template storage.
         Assert.assertEquals("sample_invoice.tx", templates.get(1).getTemplateName());
         Assert.assertEquals(34845, templates.get(1).getSize());
-        Assert.assertEquals(LocalDateTime.parse("2016-05-24T15:24:57"), templates.get(1).getModified());
+        Assert.assertEquals(ZonedDateTime.parse("2016-05-24T15:24:57+00:00"), templates.get(1).getModified());
     }
 
     @Test
@@ -78,7 +78,7 @@ public class ReportingCloudTest {
         // ToDo: Adapt the following to your own account details.
         AccountSettings as = _r.getAccountSettings();
         Assert.assertEquals(13, as.getSerialNumber().length());
-        Assert.assertEquals(LocalDateTime.parse("2020-01-01T00:00"), as.getValidUntil());
+        Assert.assertEquals(ZonedDateTime.parse("2020-01-01T00:00+00:00"), as.getValidUntil());
         Assert.assertEquals(100000, as.getMaxDocuments());
         Assert.assertEquals(500, as.getMaxTemplates());
     }

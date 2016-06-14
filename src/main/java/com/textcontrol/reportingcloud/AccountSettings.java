@@ -14,7 +14,7 @@
  */
 package com.textcontrol.reportingcloud;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -29,7 +29,7 @@ public class AccountSettings {
     private int _uploadedTemplates;
     private int _maxDocuments;
     private int _maxTemplates;
-    private LocalDateTime _validUntil;
+    private ZonedDateTime _validUntil;
 
     public AccountSettings(String serialNumber, int createdDocuments, int uploadedTemplates, int maxDocuments, int maxTemplates, String validUntil) {
         this._serialNumber = serialNumber;
@@ -37,7 +37,7 @@ public class AccountSettings {
         this._uploadedTemplates = uploadedTemplates;
         this._maxDocuments = maxDocuments;
         this._maxTemplates = maxTemplates;
-        this._validUntil = LocalDateTime.parse(validUntil, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        this._validUntil = ZonedDateTime.parse(validUntil, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 
     /**
@@ -91,7 +91,7 @@ public class AccountSettings {
      *
      * @return The date until the current subscription is valid.
      */
-    public LocalDateTime getValidUntil() {
+    public ZonedDateTime getValidUntil() {
         return _validUntil;
     }
 }
