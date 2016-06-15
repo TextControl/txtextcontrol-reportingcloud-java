@@ -19,8 +19,8 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="txtextcontrol-reportingcloud-java_main" target="1.8" />
-      <module name="txtextcontrol-reportingcloud-java_test" target="1.8" />
+      <module name="reportingcloud_main" target="1.8" />
+      <module name="reportingcloud_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

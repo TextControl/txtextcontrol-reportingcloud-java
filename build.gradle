@@ -17,10 +17,16 @@ dependencies {
     compile group: 'com.google.code.gson', name: 'gson', version: '1.7.2'
 }
 
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier "sources"
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+            artifact sourceJar
         }
     }
 }

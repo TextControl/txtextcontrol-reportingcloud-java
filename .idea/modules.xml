@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/txtextcontrol-reportingcloud-java.iml" filepath="$PROJECT_DIR$/.idea/modules/txtextcontrol-reportingcloud-java.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/txtextcontrol-reportingcloud-java_main.iml" filepath="$PROJECT_DIR$/.idea/modules/txtextcontrol-reportingcloud-java_main.iml" group="txtextcontrol-reportingcloud-java" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/txtextcontrol-reportingcloud-java_test.iml" filepath="$PROJECT_DIR$/.idea/modules/txtextcontrol-reportingcloud-java_test.iml" group="txtextcontrol-reportingcloud-java" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/reportingcloud.iml" filepath="$PROJECT_DIR$/.idea/modules/reportingcloud.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/reportingcloud_main.iml" filepath="$PROJECT_DIR$/.idea/modules/reportingcloud_main.iml" group="reportingcloud" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/reportingcloud_test.iml" filepath="$PROJECT_DIR$/.idea/modules/reportingcloud_test.iml" group="reportingcloud" />
     </modules>
   </component>
 </project>
