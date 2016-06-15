@@ -16,7 +16,7 @@ The API documentation for the ReportingCloud Java wrapper can be found [here](ht
 
 ## Build
 
-Building from source requires [Gradle](https://gradle.org/) version 2.9 or greater and a Java JDK 8. To build, change to the project's root
+Building from source requires [Gradle](https://gradle.org/) version 2.9 or greater and the Java JDK 8. To build, change to the project's root
 directory (the location of `build.gradle`) and run
 
     $ gradle build
