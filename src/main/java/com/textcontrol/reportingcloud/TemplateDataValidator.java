@@ -21,7 +21,7 @@ import java.security.InvalidParameterException;
  *
  * @author Thorsten Kummerow
  */
-public class TemplateDataValidator {
+class TemplateDataValidator {
     /**
      * Checks if a template data buffer contains something. Throws an exception if not.
      *

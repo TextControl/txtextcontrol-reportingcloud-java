@@ -21,7 +21,7 @@ import java.security.InvalidParameterException;
  *
  * @author Thorsten Kummerow
  */
-public class TemplateNameValidator {
+class TemplateNameValidator {
     /**
      * Checks if a template name contains something. Throws an exception if not.
      *
