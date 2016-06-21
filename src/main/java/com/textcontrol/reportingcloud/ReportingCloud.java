@@ -38,7 +38,7 @@ import com.textcontrol.reportingcloud.gson.TemplateDeserializer;
  */
 public class ReportingCloud {
 
-    private static final String DEFAULT_BASE_URL = "http://api.reporting.cloud";
+    private static final String DEFAULT_BASE_URL = "https://api.reporting.cloud";
     private static final String DEFAULT_VERSION = "v1";
     private static final int DEFAULT_TIMEOUT = 10;
     private static final String USER_AGENT = "Mozilla/5.0";
@@ -75,7 +75,7 @@ public class ReportingCloud {
 
     /**
      * Creates a new ReportingCloud wrapper instance with the API base URL
-     * set to <tt>"http://api.reporting.cloud"</tt>.
+     * set to <tt>"https://api.reporting.cloud"</tt>.
      *
      * @param username The username.
      * @param password The password.

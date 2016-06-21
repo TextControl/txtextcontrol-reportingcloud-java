@@ -57,9 +57,9 @@ public class ReportingCloudTest {
         Assert.assertEquals(2, templates.size());
 
         // ToDo: Adapt the following to your own template storage.
-        Assert.assertEquals("sample_invoice.tx", templates.get(1).getTemplateName());
-        Assert.assertEquals(34845, templates.get(1).getSize());
-        Assert.assertEquals(ZonedDateTime.parse("2016-05-24T15:24:57+00:00"), templates.get(1).getModified());
+        Assert.assertEquals("sample_invoice.tx", templates.get(3).getTemplateName());
+        Assert.assertEquals(34845, templates.get(3).getSize());
+        Assert.assertEquals(ZonedDateTime.parse("2016-05-24T15:24:57+00:00"), templates.get(3).getModified());
     }
 
     @Test
