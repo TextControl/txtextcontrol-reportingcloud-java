@@ -505,8 +505,8 @@ public class ReportingCloud {
      *
      * @param findAndReplaceBody The request body.
      * @return The created document.
-     * @throws IllegalArgumentException
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public byte[] findAndReplace(FindAndReplaceBody findAndReplaceBody) throws IllegalArgumentException, IOException {
         return findAndReplace(findAndReplaceBody, null);
@@ -520,8 +520,8 @@ public class ReportingCloud {
      *                     is specified, the template must be included in the
      *                     FindAndReplaceBody object of this request.
      * @return The created document.
-     * @throws IllegalArgumentException
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public byte[] findAndReplace(FindAndReplaceBody findAndReplaceBody, String templateName) throws IllegalArgumentException, IOException {
         return findAndReplace(findAndReplaceBody, templateName, ReturnFormat.PDF);
@@ -536,8 +536,8 @@ public class ReportingCloud {
      *                     FindAndReplaceBody object of this request.
      * @param returnFormat The format of the created document.
      * @return The created document.
-     * @throws IllegalArgumentException
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public byte[] findAndReplace(FindAndReplaceBody findAndReplaceBody, String templateName, ReturnFormat returnFormat)
             throws IllegalArgumentException, IOException {
@@ -555,8 +555,8 @@ public class ReportingCloud {
      * @param test Specifies whether it is a test run or not. A test run is not counted
      *             against the quota and created documents contain a watermark.
      * @return The created document.
-     * @throws IllegalArgumentException
-     * @throws IOException
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
      */
     public byte[] findAndReplace(
             FindAndReplaceBody findAndReplaceBody,
