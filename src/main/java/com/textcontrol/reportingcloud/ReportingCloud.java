@@ -584,6 +584,8 @@ public class ReportingCloud {
     }
 
     /**
+     * Lists all available fonts.
+     *
      * @return The names of all available fonts.
      * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
      * @throws IOException If an I/O error occurs.
