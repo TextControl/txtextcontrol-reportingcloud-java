@@ -29,6 +29,7 @@ public class AccountSettingsDeserializerTest {
 
         GsonBuilder gb = new GsonBuilder();
         gb.registerTypeAdapter(AccountSettings.class, new AccountSettingsDeserializer());
+        gb.serializeNulls();
         Gson g = gb.create();
         String json = g.toJson(hashMap);
         Assert.assertTrue(json.length() > 0);

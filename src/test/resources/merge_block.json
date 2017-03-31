@@ -1,0 +1,51 @@
+{
+	"name": "Sales_SalesOrderDetail",
+	"mergeFields": [
+		{
+			"dateTimeFormat": "",
+			"name": "Production_Product.ProductNumber",
+			"numericFormat": "",
+			"preserveFormatting": false,
+			"text": "«ProductNumber»",
+			"textAfter": "",
+			"textBefore": ""
+		},
+		{
+			"dateTimeFormat": "",
+			"name": "Production_Product.Name",
+			"numericFormat": "",
+			"preserveFormatting": false,
+			"text": "«Name»",
+			"textAfter": "",
+			"textBefore": ""
+		},
+		{
+			"dateTimeFormat": "",
+			"name": "OrderQty",
+			"numericFormat": "",
+			"preserveFormatting": false,
+			"text": "«OrderQty»",
+			"textAfter": "",
+			"textBefore": ""
+		},
+		{
+			"dateTimeFormat": "",
+			"name": "UnitPrice",
+			"numericFormat": "$#,###.00",
+			"preserveFormatting": false,
+			"text": "«UnitPrice»",
+			"textAfter": "",
+			"textBefore": ""
+		},
+		{
+			"dateTimeFormat": "",
+			"name": "LineTotal",
+			"numericFormat": "$#,###.00",
+			"preserveFormatting": false,
+			"text": "«LineTotal»",
+			"textAfter": "",
+			"textBefore": ""
+		}
+	],
+	"mergeBlocks": []
+}

@@ -24,6 +24,7 @@ public class MergeSettingsSerializerTest {
 
         GsonBuilder gb = new GsonBuilder();
         gb.registerTypeAdapter(MergeSettings.class, new MergeSettingsSerializer());
+        gb.serializeNulls();
         Gson g = gb.create();
 
         String json = g.toJson(s);

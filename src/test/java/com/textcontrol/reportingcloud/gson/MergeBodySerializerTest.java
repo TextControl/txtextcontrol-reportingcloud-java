@@ -31,6 +31,7 @@ public class MergeBodySerializerTest {
 
         GsonBuilder gb = new GsonBuilder();
         gb.registerTypeAdapter(MergeBody.class, new MergeBodySerializer());
+        gb.serializeNulls();
         Gson g = gb.create();
 
         String json = g.toJson(mb);

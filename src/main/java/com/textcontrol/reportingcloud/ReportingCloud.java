@@ -10,7 +10,7 @@
  *
  * License: https://raw.githubusercontent.com/TextControl/txtextcontrol-reportingcloud-java/master/LICENSE.md
  *
- * Copyright: © 2016 Text Control GmbH 
+ * Copyright: © 2017 Text Control GmbH
  */
 package com.textcontrol.reportingcloud;
 
@@ -26,10 +26,7 @@ import java.util.stream.Collectors;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.textcontrol.reportingcloud.gson.AccountSettingsDeserializer;
-import com.textcontrol.reportingcloud.gson.MergeBodySerializer;
-import com.textcontrol.reportingcloud.gson.MergeSettingsSerializer;
-import com.textcontrol.reportingcloud.gson.TemplateDeserializer;
+import com.textcontrol.reportingcloud.gson.*;
 
 /**
  * The ReportingCloud API wrapper class.
@@ -70,6 +67,9 @@ public class ReportingCloud {
         gb.registerTypeAdapter(AccountSettings.class, new AccountSettingsDeserializer());
         gb.registerTypeAdapter(MergeSettings.class, new MergeSettingsSerializer());
         gb.registerTypeAdapter(MergeBody.class, new MergeBodySerializer());
+        gb.registerTypeAdapter(TemplateInfo.class, new TemplateInfoDeserializer());
+        gb.registerTypeAdapter(FindAndReplaceBody.class, new FindAndReplaceBodySerializer());
+        gb.serializeNulls();
         _gson = gb.create();
     }
 
@@ -290,7 +290,7 @@ public class ReportingCloud {
         String res = request(ReqType.GET, "/templates/download", params);
 
         // Parse and return response
-        res = res.substring(1, res.length() - 2);
+        res = res.substring(1, res.length() - 1);
         return Base64.getDecoder().decode(res);
     }
 
@@ -326,6 +326,24 @@ public class ReportingCloud {
      */
     public byte[] convertDocument(byte[] templateData, ReturnFormat returnFormat)
             throws IllegalArgumentException, IOException {
+        return convertDocument(templateData, returnFormat, false);
+    }
+
+    /**
+     * Converts a document to another format.
+     *
+     * @param templateData The source document encoded as a Base64 string.
+     *                     The supported document formats are <tt>.rtf</tt>, <tt>.doc</tt>,
+     *                     <tt>.docx</tt>, <tt>.html</tt>, <tt>.pdf</tt> and <tt>.tx</tt>.
+     * @param returnFormat The format of the created document.
+     * @param test Specifies whether it is a test run or not. A test run is not counted
+     *             against the quota and created documents contain a watermark.
+     * @return The created document encoded as a Base64 string.
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
+     */
+    public byte[] convertDocument(byte[] templateData, ReturnFormat returnFormat, boolean test)
+            throws IllegalArgumentException, IOException {
         TemplateDataValidator.validate(templateData);
 
         // Convert template to base64
@@ -334,12 +352,13 @@ public class ReportingCloud {
         // Prepare query parameters
         HashMap<String, Object> params = new HashMap<>();
         params.put("returnFormat", returnFormat.name());
+        params.put("test", test);
 
         // Send request
         String res = request(ReqType.POST, "/document/convert", params, "\"" + dataB64 + "\"");
 
         // Parse and return response
-        res = res.substring(1, res.length() - 2);
+        res = res.substring(1, res.length() - 1);
         return Base64.getDecoder().decode(res);
     }
 
@@ -406,7 +425,38 @@ public class ReportingCloud {
      * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
      * @throws IOException If an I/O error occurs.
      */
-    public List<byte[]> mergeDocument(MergeBody mergeBody, String templateName, ReturnFormat returnFormat, boolean append)
+    public List<byte[]> mergeDocument(
+            MergeBody mergeBody,
+            String templateName,
+            ReturnFormat returnFormat,
+            boolean append)
+            throws IllegalArgumentException, IOException {
+        return mergeDocument(mergeBody, templateName, returnFormat, append, false);
+    }
+
+    /**
+     * Merges and returns a template from the template storage or an uploaded template with JSON data.
+     *
+     * @param mergeBody The MergeBody object contains the data source
+     *                  as a JSON data object and optionally, a template encoded as a Base64 string.
+     * @param templateName The name of the template in the template storage. If no template
+     *                     name is specified, the template must be uploaded in the MergeBody
+     *                     object of this request.
+     * @param returnFormat The format of the created document.
+     * @param append Specifies whether the documents should be appended to one resulting
+     *               document when more than 1 data row is passed.
+     * @param test Specifies whether it is a test run or not. A test run is not counted
+     *             against the quota and created documents contain a watermark.
+     * @return The response body contains an array of the created documents.
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
+     */
+    public List<byte[]> mergeDocument(
+            MergeBody mergeBody,
+            String templateName,
+            ReturnFormat returnFormat,
+            boolean append,
+            boolean test)
             throws IllegalArgumentException, IOException {
 
         // Parameter validation
@@ -420,6 +470,7 @@ public class ReportingCloud {
         HashMap<String, Object> params = new HashMap<>();
         params.put("returnFormat", returnFormat.name());
         params.put("append", append);
+        params.put("test", test);
         if ((templateName != null) && (templateName.length() > 0)) {
             params.put("templateName", templateName);
         }
@@ -431,6 +482,105 @@ public class ReportingCloud {
         // Parse result
         List<String> mergeResult = _gson.fromJson(res, new TypeToken<List<String>>(){}.getType());
         return mergeResult.stream().map(d -> Base64.getDecoder().decode(d)).collect(Collectors.toList());
+    }
+
+    /**
+     * Returns information about a template including merge fields and merge blocks.
+     *
+     * @param templateName The filename of the template in the template storage to retrieve the information for.
+     * @return The template information.
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
+     */
+    public TemplateInfo getTemplateInfo(String templateName) throws IllegalArgumentException, IOException {
+        TemplateNameValidator.validate(templateName);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("templateName", templateName);
+        String res = request(ReqType.GET, "/templates/info", params);
+        return _gson.fromJson(res, TemplateInfo.class);
+    }
+
+    /**
+     * Executes a find and replace on a template.
+     *
+     * @param findAndReplaceBody The request body.
+     * @return The created document.
+     * @throws IllegalArgumentException
+     * @throws IOException
+     */
+    public byte[] findAndReplace(FindAndReplaceBody findAndReplaceBody) throws IllegalArgumentException, IOException {
+        return findAndReplace(findAndReplaceBody, null);
+    }
+
+    /**
+     * Executes a find and replace on a template.
+     *
+     * @param findAndReplaceBody The request body.
+     * @param templateName The name of the template in the template storage. If no template
+     *                     is specified, the template must be included in the
+     *                     FindAndReplaceBody object of this request.
+     * @return The created document.
+     * @throws IllegalArgumentException
+     * @throws IOException
+     */
+    public byte[] findAndReplace(FindAndReplaceBody findAndReplaceBody, String templateName) throws IllegalArgumentException, IOException {
+        return findAndReplace(findAndReplaceBody, templateName, ReturnFormat.PDF);
+    }
+
+    /**
+     * Executes a find and replace on a template.
+     *
+     * @param findAndReplaceBody The request body.
+     * @param templateName The name of the template in the template storage. If no template
+     *                     is specified, the template must be included in the
+     *                     FindAndReplaceBody object of this request.
+     * @param returnFormat The format of the created document.
+     * @return The created document.
+     * @throws IllegalArgumentException
+     * @throws IOException
+     */
+    public byte[] findAndReplace(FindAndReplaceBody findAndReplaceBody, String templateName, ReturnFormat returnFormat)
+            throws IllegalArgumentException, IOException {
+        return findAndReplace(findAndReplaceBody, templateName, returnFormat, false);
+    }
+
+    /**
+     * Executes a find and replace on a template.
+     *
+     * @param findAndReplaceBody The request body.
+     * @param templateName The name of the template in the template storage. If no template
+     *                     is specified, the template must be included in the
+     *                     FindAndReplaceBody object of this request.
+     * @param returnFormat The format of the created document.
+     * @param test Specifies whether it is a test run or not. A test run is not counted
+     *             against the quota and created documents contain a watermark.
+     * @return The created document.
+     * @throws IllegalArgumentException
+     * @throws IOException
+     */
+    public byte[] findAndReplace(
+            FindAndReplaceBody findAndReplaceBody,
+            String templateName,
+            ReturnFormat returnFormat,
+            boolean test) throws IllegalArgumentException, IOException {
+
+        // Parameter validation
+        if (findAndReplaceBody == null) throw new NullPointerException("Parameter \"findAndReplaceBody\" must not be null.");
+        if ((templateName != null) && (templateName.isEmpty())) templateName = null;
+
+        // Prepare query parameters
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("returnFormat", returnFormat.name());
+        params.put("templateName", templateName);
+        params.put("test", test);
+
+        // Send request
+        String findAndReplaceBodyJson = _gson.toJson(findAndReplaceBody);
+        String res = request(ReqType.POST, "/document/findandreplace", params, findAndReplaceBodyJson);
+
+        // Parse and return response
+        res = res.substring(1, res.length() - 1);
+        return Base64.getDecoder().decode(res);
     }
 
     /**

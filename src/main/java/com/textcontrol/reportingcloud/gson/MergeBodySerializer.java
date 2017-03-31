@@ -10,7 +10,7 @@
  *
  * License: https://raw.githubusercontent.com/TextControl/txtextcontrol-reportingcloud-java/master/LICENSE.md
  *
- * Copyright: © 2016 Text Control GmbH
+ * Copyright: © 2017 Text Control GmbH
  */
 package com.textcontrol.reportingcloud.gson;
 
@@ -32,6 +32,7 @@ public class MergeBodySerializer implements JsonSerializer<MergeBody> {
     public JsonElement serialize(MergeBody src, Type typeOfSrc, JsonSerializationContext context) {
         GsonBuilder gb = new GsonBuilder();
         gb.registerTypeAdapter(MergeSettings.class, new MergeSettingsSerializer());
+        gb.serializeNulls();
         Gson gson = gb.create();
 
         JsonObject result = new JsonObject();

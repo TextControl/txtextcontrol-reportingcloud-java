@@ -10,7 +10,7 @@
  *
  * License: https://raw.githubusercontent.com/TextControl/txtextcontrol-reportingcloud-java/master/LICENSE.md
  *
- * Copyright: © 2016 Text Control GmbH
+ * Copyright: © 2017 Text Control GmbH
  */
 package com.textcontrol.reportingcloud;
 

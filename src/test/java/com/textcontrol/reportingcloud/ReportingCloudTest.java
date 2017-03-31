@@ -1,5 +1,6 @@
 package com.textcontrol.reportingcloud;
 
+import javafx.util.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -41,12 +43,11 @@ public class ReportingCloudTest {
     public void getTemplateCount() throws Exception {
         // ToDo: Adapt the following to your own template storage.
         int nCount = _r.getTemplateCount();
-        Assert.assertEquals(2, nCount);
+        Assert.assertEquals(4, nCount);
     }
 
     @Test
     public void getTemplatePageCount() throws Exception {
-        // ToDo: Adapt the following to your own template storage.
         int nPages = _r.getTemplatePageCount("new_template.docx");
         Assert.assertEquals(2, nPages);
     }
@@ -54,17 +55,17 @@ public class ReportingCloudTest {
     @Test
     public void listTemplates() throws Exception {
         List<Template> templates = _r.listTemplates();
-        Assert.assertEquals(2, templates.size());
+        Assert.assertEquals(4, templates.size());
 
         // ToDo: Adapt the following to your own template storage.
         Assert.assertEquals("sample_invoice.tx", templates.get(3).getTemplateName());
         Assert.assertEquals(34845, templates.get(3).getSize());
-        Assert.assertEquals(ZonedDateTime.parse("2016-05-24T15:24:57+00:00"), templates.get(3).getModified());
+        Assert.assertEquals(ZonedDateTime.parse("2016-04-15T19:05:18+00:00"), templates.get(3).getModified());
     }
 
     @Test
     public void convertDocument() throws Exception {
-        byte[] converted = _r.convertDocument(_testDocData, ReturnFormat.PDF);
+        byte[] converted = _r.convertDocument(_testDocData, ReturnFormat.PDF, true);
 
         // Check for PDF magic number
         Assert.assertEquals(0x25, converted[0]);
@@ -78,7 +79,7 @@ public class ReportingCloudTest {
         // ToDo: Adapt the following to your own account details.
         AccountSettings as = _r.getAccountSettings();
         Assert.assertEquals(13, as.getSerialNumber().length());
-        Assert.assertEquals(ZonedDateTime.parse("2020-01-01T00:00+00:00"), as.getValidUntil());
+        Assert.assertEquals(ZonedDateTime.parse("2026-12-08T00:00+00:00"), as.getValidUntil());
         Assert.assertEquals(100000, as.getMaxDocuments());
         Assert.assertEquals(500, as.getMaxTemplates());
     }
@@ -130,7 +131,7 @@ public class ReportingCloudTest {
         MergeBody mb = new MergeBody(md, ms);
 
         // Merge the document
-        List<byte[]> mergeResult = _r.mergeDocument(mb, "sample_invoice.tx");
+        List<byte[]> mergeResult = _r.mergeDocument(mb, "sample_invoice.tx", ReturnFormat.PDF, false, true);
 
         Assert.assertEquals(2, mergeResult.size());
 
@@ -160,7 +161,7 @@ public class ReportingCloudTest {
         MergeBody mb = new MergeBody(md, ms);
 
         // Merge the document
-        List<byte[]> mergeResult = _r.mergeDocument(mb, "sample_invoice.tx");
+        List<byte[]> mergeResult = _r.mergeDocument(mb, "sample_invoice.tx", ReturnFormat.PDF, false, true);
 
         Assert.assertEquals(2, mergeResult.size());
 
@@ -228,5 +229,30 @@ public class ReportingCloudTest {
         Assert.assertTrue(_r.templateExists(TestTemplateName));
         _r.deleteTemplate(TestTemplateName);
         Assert.assertFalse(_r.templateExists(TestTemplateName));
+    }
+
+    @Test
+    public void getTemplateInfo() throws Exception {
+        String templateName = "invoice.tx";
+        TemplateInfo info = _r.getTemplateInfo(templateName);
+        Assert.assertEquals(templateName, info.getTemplateName());
+    }
+
+    @Test
+    public void findAndReplace() throws Exception {
+        // ToDo: Adapt the following to your own template storage.
+        String templateName = "invoice.tx";
+        List<Template> templates = _r.listTemplates();
+        Assert.assertTrue(templates.stream().anyMatch(t -> t.getTemplateName().equals(templateName)));
+        List<Pair<String, String>> data = new ArrayList<>();
+        data.add(new Pair<>("Quick Facts", "Awesome Facts"));
+        data.add(new Pair<>("Total Due", "IOU"));
+        FindAndReplaceBody frb = new FindAndReplaceBody(data);
+        byte[] result = _r.findAndReplace(frb, templateName, ReturnFormat.HMTL, true);
+        String html = new String(result, "UTF-8");
+        Assert.assertTrue(html.contains("Awesome Facts"));
+        Assert.assertTrue(html.contains("IOU"));
+        Assert.assertFalse(html.contains("Quick Facts"));
+        Assert.assertFalse(html.contains("Total Due"));
     }
 }

@@ -25,6 +25,7 @@ public class TemplateDeserializerTest {
 
         GsonBuilder gb = new GsonBuilder();
         gb.registerTypeAdapter(Template.class, new TemplateDeserializer());
+        gb.serializeNulls();
         Gson g = gb.create();
         String json = g.toJson(hashMap);
         Assert.assertTrue(json.length() > 0);

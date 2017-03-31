@@ -10,7 +10,7 @@
  *
  * License: https://raw.githubusercontent.com/TextControl/txtextcontrol-reportingcloud-java/master/LICENSE.md
  *
- * Copyright: © 2016 Text Control GmbH
+ * Copyright: © 2017 Text Control GmbH
  */
 package com.textcontrol.reportingcloud;
 
@@ -103,7 +103,7 @@ public class MergeSettings {
      * Sets whether images which don't have merge data should be removed from
      * the template or not.
      *
-     * @param removeEmptyImages images which don't have merge data should be
+     * @param removeEmptyImages Images which don't have merge data should be
      *                          removed from the template or not.
      */
     public void setRemoveEmptyImages(boolean removeEmptyImages) {
@@ -122,7 +122,7 @@ public class MergeSettings {
     /**
      * Sets whether trailing whitespace should be removed before saving a document.
      *
-     * @param removeTrailingWhitespace trailing whitespace should be removed before
+     * @param removeTrailingWhitespace Trailing whitespace should be removed before
      *                                 saving a document.
      */
     public void setRemoveTrailingWhitespace(boolean removeTrailingWhitespace) {
