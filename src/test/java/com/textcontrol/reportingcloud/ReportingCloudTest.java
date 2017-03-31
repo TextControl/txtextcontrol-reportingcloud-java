@@ -256,4 +256,11 @@ public class ReportingCloudTest {
         Assert.assertFalse(html.contains("Quick Facts"));
         Assert.assertFalse(html.contains("Total Due"));
     }
+
+    @Test
+    public void listFonts() throws Exception {
+        List<String> fontNames = _r.listFonts();
+        Assert.assertTrue(fontNames.size() > 0);
+        Assert.assertTrue(fontNames.stream().anyMatch(name -> name.equals("Arial")));
+    }
 }
