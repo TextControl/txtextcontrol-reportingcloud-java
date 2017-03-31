@@ -53,5 +53,5 @@ public enum ReturnFormat {
     /**
      * Hypertext Markup Language
      */
-    HMTL
+    HTML
 }

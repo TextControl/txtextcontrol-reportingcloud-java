@@ -48,6 +48,7 @@ public class ReportingCloudTest {
 
     @Test
     public void getTemplatePageCount() throws Exception {
+        // ToDo: Adapt the following to your own template storage.
         int nPages = _r.getTemplatePageCount("new_template.docx");
         Assert.assertEquals(2, nPages);
     }
@@ -248,7 +249,7 @@ public class ReportingCloudTest {
         data.add(new Pair<>("Quick Facts", "Awesome Facts"));
         data.add(new Pair<>("Total Due", "IOU"));
         FindAndReplaceBody frb = new FindAndReplaceBody(data);
-        byte[] result = _r.findAndReplace(frb, templateName, ReturnFormat.HMTL, true);
+        byte[] result = _r.findAndReplace(frb, templateName, ReturnFormat.HTML, true);
         String html = new String(result, "UTF-8");
         Assert.assertTrue(html.contains("Awesome Facts"));
         Assert.assertTrue(html.contains("IOU"));
