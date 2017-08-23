@@ -277,8 +277,17 @@ public class ReportingCloudTest {
         iw = incorrectWords.get(1);
         Assert.assertEquals(5, iw.getLength());
         Assert.assertEquals(11, iw.getStart());
-        Assert.assertEquals("tesst", iw.getText());
+        Assert.assertEquals("testt", iw.getText());
         Assert.assertFalse(iw.isDuplicate());
         Assert.assertEquals("en_US.dic", iw.getLanguage());
+    }
+
+    @Test
+    public void getAvailableDictionaries() throws Exception {
+        List<String> dicts = _r.getAvailableDictionaries();
+        Assert.assertFalse(dicts.isEmpty());
+        Assert.assertTrue(dicts.stream().anyMatch(dict -> dict.equals("en_US.dic")));
+        Assert.assertTrue(dicts.stream().anyMatch(dict -> dict.equals("fr.dic")));
+        Assert.assertTrue(dicts.stream().anyMatch(dict -> dict.equals("en_GB.dic")));
     }
 }

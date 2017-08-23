@@ -622,6 +622,19 @@ public class ReportingCloud {
     }
 
     /**
+     * Returns all available dictionary names.
+     *
+     * @return Available dictionary names.
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
+     */
+    public List<String> getAvailableDictionaries() throws IllegalArgumentException, IOException {
+        // Send request
+        String res = request(ReqType.GET, "/proofing/availabledictionaries");
+        return _gson.fromJson(res, new TypeToken<List<String>>(){}.getType());
+    }
+
+    /**
      * Possible HTTP request types
      */
     private enum ReqType {
