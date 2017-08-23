@@ -14,10 +14,7 @@
  */
 package com.textcontrol.reportingcloud;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.*;
 import java.security.InvalidParameterException;
 import java.util.*;
@@ -26,6 +23,7 @@ import java.util.stream.Collectors;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.sun.scenario.effect.impl.sw.java.JSWBlend_GREENPeer;
 import com.textcontrol.reportingcloud.gson.*;
 
 /**
@@ -65,6 +63,7 @@ public class ReportingCloud {
         GsonBuilder gb = new GsonBuilder();
         gb.registerTypeAdapter(Template.class, new TemplateDeserializer());
         gb.registerTypeAdapter(AccountSettings.class, new AccountSettingsDeserializer());
+        gb.registerTypeAdapter(IncorrectWord.class, new IncorrectWordDeserializer());
         gb.registerTypeAdapter(MergeSettings.class, new MergeSettingsSerializer());
         gb.registerTypeAdapter(MergeBody.class, new MergeBodySerializer());
         gb.registerTypeAdapter(TemplateInfo.class, new TemplateInfoDeserializer());
@@ -597,6 +596,32 @@ public class ReportingCloud {
     }
 
     /**
+     * Checks text for spelling errors.
+     *
+     * @param text The text to spell check.
+     * @param language The language that is used to spell check the specified text.
+     * @return A list of {@link com.textcontrol.reportingcloud.IncorrectWord} objects.
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
+     */
+    public List<IncorrectWord> spellCheckText(String text, String language) throws IllegalArgumentException, IOException {
+        // Parameter validation
+        if ((text == null) || text.isEmpty()) throw new IllegalArgumentException("The given text must not be empty.");
+        if ((language == null) || language.isEmpty()) throw new IllegalArgumentException("A language must be defined.");
+
+        // Prepare query parameters
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("text", text);
+        params.put("language", language);
+
+        // Send request
+        String res = request(ReqType.GET, "/proofing/check", params);
+
+        // Parse and return response
+        return _gson.fromJson(res, new TypeToken<List<IncorrectWord>>(){}.getType());
+    }
+
+    /**
      * Possible HTTP request types
      */
     private enum ReqType {
@@ -706,8 +731,12 @@ public class ReportingCloud {
     /**
      * Generates a query string from a hash.
      */
-    private static String queryStringFromHashMap(HashMap<String, Object> hashMap) {
-        if (hashMap == null) return "";
-        return "?" + hashMap.keySet().stream().map(k -> k + "=" + hashMap.get(k).toString()).collect(Collectors.joining("&"));
+    private static String queryStringFromHashMap(HashMap<String, Object> hashMap) throws UnsupportedEncodingException {
+        if ((hashMap == null) || hashMap.isEmpty()) return "";
+        List<String> pairs = new ArrayList<>();
+        for (String key : hashMap.keySet()) {
+            pairs.add(key + "=" + URLEncoder.encode(hashMap.get(key).toString(), "UTF-8"));
+        }
+        return "?" + String.join("&", pairs);
     }
 }

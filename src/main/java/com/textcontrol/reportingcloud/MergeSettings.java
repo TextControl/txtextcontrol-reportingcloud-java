@@ -28,6 +28,7 @@ public class MergeSettings {
     private boolean _removeEmptyBlocks;
     private boolean _removeEmptyImages;
     private boolean _removeTrailingWhitespace;
+    private boolean _mergeHtml;
     private String _author;
     private String _creatorApplication;
     private String _documentSubject;
@@ -41,6 +42,7 @@ public class MergeSettings {
         this._removeEmptyBlocks = true;
         this._removeEmptyImages = true;
         this._removeTrailingWhitespace = true;
+        this._mergeHtml = false;
         this._author = null;
         this._creatorApplication = null;
         this._documentSubject = null;
@@ -127,6 +129,24 @@ public class MergeSettings {
      */
     public void setRemoveTrailingWhitespace(boolean removeTrailingWhitespace) {
         this._removeTrailingWhitespace = removeTrailingWhitespace;
+    }
+
+    /**
+     * Returns whether field data can contain formatted Html content or not.
+     *
+     * @return Field data can contain formatted Html content or not.
+     */
+    public boolean getMergeHtml() {
+        return this._mergeHtml;
+    }
+
+    /**
+     * Sets whether field data can contain formatted Html content or not.
+     *
+     * @param mergeHtml Field data can contain formatted Html content or not.
+     */
+    public void setMergeHtml(boolean mergeHtml) {
+        this._mergeHtml = mergeHtml;
     }
 
     /**

@@ -64,5 +64,6 @@ public class FindAndReplaceBodySerializerTest {
         Assert.assertTrue(objMergeSettings.has("removeEmptyBlocks"));
         Assert.assertTrue(objMergeSettings.has("removeEmptyImages"));
         Assert.assertTrue(objMergeSettings.has("removeTrailingWhitespace"));
+        Assert.assertTrue(objMergeSettings.has("mergeHtml"));
     }
 }

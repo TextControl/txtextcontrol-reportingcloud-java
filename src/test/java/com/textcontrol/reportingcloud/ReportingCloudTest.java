@@ -263,4 +263,22 @@ public class ReportingCloudTest {
         Assert.assertTrue(fontNames.size() > 0);
         Assert.assertTrue(fontNames.stream().anyMatch(name -> name.equals("Arial")));
     }
+
+    @Test
+    public void spellCheckText() throws Exception {
+        List<IncorrectWord> incorrectWords = _r.spellCheckText("Thiss is a testt", "en_US.dic");
+        Assert.assertEquals(2, incorrectWords.size());
+        IncorrectWord iw = incorrectWords.get(0);
+        Assert.assertEquals(5, iw.getLength());
+        Assert.assertEquals(0, iw.getStart());
+        Assert.assertEquals("Thiss", iw.getText());
+        Assert.assertFalse(iw.isDuplicate());
+        Assert.assertEquals("en_US.dic", iw.getLanguage());
+        iw = incorrectWords.get(1);
+        Assert.assertEquals(5, iw.getLength());
+        Assert.assertEquals(11, iw.getStart());
+        Assert.assertEquals("tesst", iw.getText());
+        Assert.assertFalse(iw.isDuplicate());
+        Assert.assertEquals("en_US.dic", iw.getLanguage());
+    }
 }

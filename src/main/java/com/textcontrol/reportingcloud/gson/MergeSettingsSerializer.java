@@ -38,6 +38,7 @@ public class MergeSettingsSerializer implements JsonSerializer<MergeSettings> {
         result.addProperty("removeEmptyBlocks", src.getRemoveEmptyBlocks());
         result.addProperty("removeEmptyImages", src.getRemoveEmptyImages());
         result.addProperty("removeTrailingWhitespace", src.getRemoveTrailingWhitespace());
+        result.addProperty("mergeHtml", src.getMergeHtml());
         result.addProperty("author", src.getAuthor());
         result.addProperty("creatorApplication", src.getCreatorApplication());
         result.addProperty("documentSubject", src.getDocumentSubject());
