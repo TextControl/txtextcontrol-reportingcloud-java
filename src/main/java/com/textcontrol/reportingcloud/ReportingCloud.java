@@ -604,7 +604,7 @@ public class ReportingCloud {
      * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
      * @throws IOException If an I/O error occurs.
      */
-    public List<IncorrectWord> spellCheckText(String text, String language) throws IllegalArgumentException, IOException {
+    public List<IncorrectWord> checkText(String text, String language) throws IllegalArgumentException, IOException {
         // Parameter validation
         if ((text == null) || text.isEmpty()) throw new IllegalArgumentException("The given text must not be empty.");
         if ((language == null) || language.isEmpty()) throw new IllegalArgumentException("A language must be defined.");
@@ -629,8 +629,35 @@ public class ReportingCloud {
      * @throws IOException If an I/O error occurs.
      */
     public List<String> getAvailableDictionaries() throws IllegalArgumentException, IOException {
-        // Send request
+        // Send request and return response
         String res = request(ReqType.GET, "/proofing/availabledictionaries");
+        return _gson.fromJson(res, new TypeToken<List<String>>(){}.getType());
+    }
+
+    /**
+     * Returns suggestions for a misspelled word.
+     *
+     * @param word The incorrect word that has to be determined for suggestions.
+     * @param language The language that is used to spell check the specified text.
+     * @param max The maximum number of suggestions that has to be determined.
+     * @return Suggestions for a misspelled word.
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
+     */
+    public List<String> getSuggestions(String word, String language, int max) throws IllegalArgumentException, IOException {
+        // Parameter validation
+        if ((word == null) || word.isEmpty()) throw new IllegalArgumentException("The misspelled word must not be null or empty.");
+        if ((language == null) || language.isEmpty()) throw new IllegalArgumentException("A language must be defined.");
+        if (max <= 0) throw new IllegalArgumentException("max must be > 0.");
+
+        // Prepare query parameters
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("word", word);
+        params.put("language", language);
+        params.put("max", max);
+
+        // Send request and return response
+        String res = request(ReqType.GET, "/proofing/suggestions", params);
         return _gson.fromJson(res, new TypeToken<List<String>>(){}.getType());
     }
 

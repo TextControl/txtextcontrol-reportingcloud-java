@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 /**
@@ -265,8 +264,8 @@ public class ReportingCloudTest {
     }
 
     @Test
-    public void spellCheckText() throws Exception {
-        List<IncorrectWord> incorrectWords = _r.spellCheckText("Thiss is a testt", "en_US.dic");
+    public void checkText() throws Exception {
+        List<IncorrectWord> incorrectWords = _r.checkText("Thiss is a testt", "en_US.dic");
         Assert.assertEquals(2, incorrectWords.size());
         IncorrectWord iw = incorrectWords.get(0);
         Assert.assertEquals(5, iw.getLength());
@@ -289,5 +288,14 @@ public class ReportingCloudTest {
         Assert.assertTrue(dicts.stream().anyMatch(dict -> dict.equals("en_US.dic")));
         Assert.assertTrue(dicts.stream().anyMatch(dict -> dict.equals("fr.dic")));
         Assert.assertTrue(dicts.stream().anyMatch(dict -> dict.equals("en_GB.dic")));
+    }
+
+    @Test
+    public void getSuggestions() throws Exception {
+        List<String> suggestions = _r.getSuggestions("Thiss", "en_US.dic", 10);
+        Assert.assertEquals(10, suggestions.size());
+        Assert.assertEquals("This", suggestions.get(0));
+        Assert.assertEquals("Hiss", suggestions.get(1));
+        Assert.assertEquals("Thesis", suggestions.get(2));
     }
 }
