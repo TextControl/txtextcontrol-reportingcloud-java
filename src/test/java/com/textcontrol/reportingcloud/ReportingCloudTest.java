@@ -51,7 +51,10 @@ public class ReportingCloudTest {
             Password = cred.password;
         }
         catch (Exception exc) {
-            throw new RuntimeException("Something went wrong reading the credentials file. To run the tests put a file \"" + CredentialsFileName + "\" containing an object with the properties \"username\" and \"password\" into the folder \"src/test/resources\". Exception message: \"" + exc.getMessage() + "\"");
+            throw new RuntimeException("Something went wrong reading the credentials file. To run the tests put a "
+                    + "file \"" + CredentialsFileName + "\" containing an object with the properties \"username\" "
+                    + "and \"password\" into the folder \"src/test/resources\". Exception message: "
+                    + "\"" + exc.getMessage() + "\"");
         }
     }
 
@@ -163,10 +166,7 @@ public class ReportingCloudTest {
         Assert.assertEquals(2, mergeResult.size());
 
         // Check for PDF magic number
-        Assert.assertEquals(0x25, mergeResult.get(0)[0]);
-        Assert.assertEquals(0x50, mergeResult.get(0)[1]);
-        Assert.assertEquals(0x44, mergeResult.get(0)[2]);
-        Assert.assertEquals(0x46, mergeResult.get(0)[3]);
+        Assert.assertTrue(isPDF(mergeResult.get(0)));
     }
 
     @Test
@@ -193,10 +193,41 @@ public class ReportingCloudTest {
         Assert.assertEquals(2, mergeResult.size());
 
         // Check for PDF magic number
-        Assert.assertEquals(0x25, mergeResult.get(0)[0]);
-        Assert.assertEquals(0x50, mergeResult.get(0)[1]);
-        Assert.assertEquals(0x44, mergeResult.get(0)[2]);
-        Assert.assertEquals(0x46, mergeResult.get(0)[3]);
+        Assert.assertTrue(isPDF(mergeResult.get(0)));
+    }
+
+    /**
+     * Checks for PDF magic number.
+     */
+    private boolean isPDF(byte[] data) {
+        return (data.length > 4)
+                && (data[0] == 0x25)
+                && (data[1] == 0x50)
+                && (data[2] == 0x44)
+                && (data[3] == 0x46);
+    }
+
+    @Test
+    public void appendDocuments() throws Exception {
+        List<AppendDocument> docs = new ArrayList<>();
+        docs.add(new AppendDocument(_testDocData));
+        docs.add(new AppendDocument(_testDocData, DocumentDivider.NewSection));
+
+        DocumentSettings docSettings = new DocumentSettings();
+        docSettings._author = "John Doe";
+        docSettings._creatorApplication = "That App™";
+
+        AppendBody ab = new AppendBody(docs, docSettings);
+
+        // Append the documents
+        byte[] result = _r.appendDocuments(ab);
+
+        Assert.assertEquals(18789, result.length);
+
+        // Check for PDF magic number
+        Assert.assertTrue(isPDF(result));
+
+        // ToDo: validate document settings in PDF somehow
     }
 
     @Test
@@ -328,7 +359,7 @@ public class ReportingCloudTest {
 
     @Test
     public void getAPIKeys() throws Exception {
-        // ToDo: Adapt the following to your own account settings.
+        // ToDo: Adapt the following to your own account details.
         List<APIKey> keys = _r.getAPIKeys();
         Assert.assertEquals(keys.size(), 2);
         for (APIKey key : keys) {
@@ -338,7 +369,7 @@ public class ReportingCloudTest {
 
     @Test
     public void createAndDeleteAPIKey() throws Exception {
-        // ToDo: Adapt the following to your own account settings.
+        // ToDo: Adapt the following to your own account details.
         String key = _r.createAPIKey();
         Assert.assertTrue(isAPIKey(key));
         List<APIKey> keys = _r.getAPIKeys();

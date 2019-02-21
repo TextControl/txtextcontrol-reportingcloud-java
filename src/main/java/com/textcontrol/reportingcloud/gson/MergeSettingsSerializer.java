@@ -21,8 +21,6 @@ import com.google.gson.JsonSerializer;
 import com.textcontrol.reportingcloud.MergeSettings;
 
 import java.lang.reflect.Type;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Needed by GSON to serialize {@link com.textcontrol.reportingcloud.MergeSettings} objects to
@@ -33,23 +31,13 @@ import java.time.format.DateTimeFormatter;
 public class MergeSettingsSerializer implements JsonSerializer<MergeSettings> {
     @Override
     public JsonElement serialize(MergeSettings src, Type typeOfSrc, JsonSerializationContext context) {
-        JsonObject result = new JsonObject();
+        DocumentSettingsSerializer dsSer = new DocumentSettingsSerializer();
+        JsonObject result = (JsonObject) dsSer.serialize(src, typeOfSrc, context);
         result.addProperty("removeEmptyFields", src.getRemoveEmptyFields());
         result.addProperty("removeEmptyBlocks", src.getRemoveEmptyBlocks());
         result.addProperty("removeEmptyImages", src.getRemoveEmptyImages());
         result.addProperty("removeTrailingWhitespace", src.getRemoveTrailingWhitespace());
         result.addProperty("mergeHtml", src.getMergeHtml());
-        result.addProperty("author", src.getAuthor());
-        result.addProperty("creatorApplication", src.getCreatorApplication());
-        result.addProperty("documentSubject", src.getDocumentSubject());
-        result.addProperty("documentTitle", src.getdocumentTitle());
-        result.addProperty("userPassword", src.getUserPassword());
-        ZonedDateTime lastModDate = src.getLastModificationDate();
-        String strLastModDate = lastModDate == null ? null : lastModDate.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        result.addProperty("lastModificationDate", strLastModDate);
-        ZonedDateTime creationDate = src.getCreationDate();
-        String strCreationDate = creationDate == null ? null : creationDate.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        result.addProperty("creationDate", strCreationDate);
         return result;
     }
 }

@@ -68,6 +68,7 @@ public class ReportingCloud {
         gb.registerTypeAdapter(TemplateInfo.class, new TemplateInfoDeserializer());
         gb.registerTypeAdapter(FindAndReplaceBody.class, new FindAndReplaceBodySerializer());
         gb.registerTypeAdapter(APIKey.class, new APIKeyDeserializer());
+        gb.registerTypeAdapter(AppendBody.class, new AppendBodySerializer());
         gb.serializeNulls();
         _gson = gb.create();
     }
@@ -481,6 +482,64 @@ public class ReportingCloud {
         // Parse result
         List<String> mergeResult = _gson.fromJson(res, new TypeToken<List<String>>(){}.getType());
         return mergeResult.stream().map(d -> Base64.getDecoder().decode(d)).collect(Collectors.toList());
+    }
+
+    /**
+     * Combines documents by appending them divided by a new section, paragraph or nothing.
+     * @param appendBody The AppendBody object contains the templates and a DocumentSettings
+     *                   object.
+     * @return The resulting document.
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
+     */
+    public byte[] appendDocuments(AppendBody appendBody)
+            throws IllegalArgumentException, IOException {
+        return appendDocuments(appendBody, ReturnFormat.PDF);
+    }
+
+    /**
+     * Combines documents by appending them divided by a new section, paragraph or nothing.
+     * @param appendBody The AppendBody object contains the templates and a DocumentSettings
+     *                   object.
+     * @param returnFormat The format of the created document.
+     * @return The resulting document.
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
+     */
+    public byte[] appendDocuments(AppendBody appendBody, ReturnFormat returnFormat)
+            throws IllegalArgumentException, IOException {
+        return appendDocuments(appendBody, returnFormat, false);
+    }
+
+    /**
+     * Combines documents by appending them divided by a new section, paragraph or nothing.
+     * @param appendBody The AppendBody object contains the templates and a DocumentSettings
+     *                   object.
+     * @param returnFormat The format of the created document.
+     * @param test Specifies whether it is a test run or not. A test run is not counted
+     *             against the quota and created documents contain a watermark.
+     * @return The resulting document.
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
+     */
+    public byte[] appendDocuments(AppendBody appendBody, ReturnFormat returnFormat, boolean test)
+            throws IllegalArgumentException, IOException {
+
+        // Parameter validation
+        if (appendBody.getDocuments().size() == 0) throw new IllegalArgumentException("No documents provided.");
+
+        // Prepare query parameters
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("returnFormat", returnFormat.name());
+        params.put("test", test);
+
+        // Send request
+        String appendBodyJson = _gson.toJson(appendBody);
+        String res = request(ReqType.POST, "/document/append", params, appendBodyJson);
+
+        // Parse result and convert to byte array
+        String result = _gson.fromJson(res, String.class);
+        return Base64.getDecoder().decode(result);
     }
 
     /**

@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * MergeSettingsSerializerTest test class.
+ * MergeSettingsSerializer test class.
  *
  * @author Thorsten Kummerow
  */
