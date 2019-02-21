@@ -1,11 +1,14 @@
 package com.textcontrol.reportingcloud;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.util.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,27 +25,51 @@ public class ReportingCloudTest {
 
     private ReportingCloud _r;
     private byte[] _testDocData;
+    private static String Username;
+    private static String Password;
 
     private static final String TestTemplateName = "__java_wrapper_test.tx";
+    private static final String CredentialsFileName = "rc_credentials.json";
+    public static String ResourcesDir;
 
-    public ReportingCloudTest() throws IOException {
+    static {
         Path currentRelPath = Paths.get("");
         String absPath = currentRelPath.toAbsolutePath().toString();
-        String testDocPath = absPath + "\\src\\test\\resources\\" + TestTemplateName;
+        ResourcesDir = absPath + "\\src\\test\\resources\\";
+
+        // ToDo: To run the ReportingCloud API tests, provide the file
+        //  "src/test/resources/rc_credentials.json" containing an object with
+        //  the properties "username" and "password".
+
+        String credentialsPath = ResourcesDir + CredentialsFileName;
+        try {
+            byte[] jsonUTF8 = Files.readAllBytes(Paths.get(credentialsPath));
+            String json = new String(jsonUTF8, StandardCharsets.UTF_8);
+            Gson gson = (new GsonBuilder()).create();
+            Credentials cred = gson.fromJson(json, Credentials.class);
+            Username = cred.username;
+            Password = cred.password;
+        }
+        catch (Exception exc) {
+            throw new RuntimeException("Something went wrong reading the credentials file. To run the tests put a file \"" + CredentialsFileName + "\" containing an object with the properties \"username\" and \"password\" into the folder \"src/test/resources\". Exception message: \"" + exc.getMessage() + "\"");
+        }
+    }
+
+    public ReportingCloudTest() throws IOException {
+        String testDocPath = ResourcesDir + TestTemplateName;
         _testDocData = Files.readAllBytes(Paths.get(testDocPath));
     }
 
     @Before
-    public void initialize() throws IOException {
-        // ToDo: Fill in your ReportingCloud credentials here.
-        _r = new ReportingCloud("<USERNAME>", "<PASSWORD>");
+    public void initialize() throws Exception {
+        _r = new ReportingCloud(Username, Password);
     }
 
     @Test
     public void getTemplateCount() throws Exception {
         // ToDo: Adapt the following to your own template storage.
         int nCount = _r.getTemplateCount();
-        Assert.assertEquals(4, nCount);
+        Assert.assertEquals(5, nCount);
     }
 
     @Test
@@ -55,12 +82,12 @@ public class ReportingCloudTest {
     @Test
     public void listTemplates() throws Exception {
         List<Template> templates = _r.listTemplates();
-        Assert.assertEquals(4, templates.size());
+        Assert.assertEquals(5, templates.size());
 
         // ToDo: Adapt the following to your own template storage.
-        Assert.assertEquals("sample_invoice.tx", templates.get(3).getTemplateName());
-        Assert.assertEquals(34845, templates.get(3).getSize());
-        Assert.assertEquals(ZonedDateTime.parse("2016-04-15T19:05:18+00:00"), templates.get(3).getModified());
+        Assert.assertEquals("sample_invoice.tx", templates.get(4).getTemplateName());
+        Assert.assertEquals(34845, templates.get(4).getSize());
+        Assert.assertEquals(ZonedDateTime.parse("2016-04-15T19:05:18+00:00"), templates.get(4).getModified());
     }
 
     @Test
@@ -79,7 +106,7 @@ public class ReportingCloudTest {
         // ToDo: Adapt the following to your own account details.
         AccountSettings as = _r.getAccountSettings();
         Assert.assertEquals(13, as.getSerialNumber().length());
-        Assert.assertEquals(ZonedDateTime.parse("2026-12-08T00:00+00:00"), as.getValidUntil());
+        Assert.assertEquals(ZonedDateTime.parse("2026-12-08T08:00+00:00"), as.getValidUntil());
         Assert.assertEquals(100000, as.getMaxDocuments());
         Assert.assertEquals(500, as.getMaxTemplates());
     }
@@ -297,5 +324,33 @@ public class ReportingCloudTest {
         Assert.assertEquals("This", suggestions.get(0));
         Assert.assertEquals("Hiss", suggestions.get(1));
         Assert.assertEquals("Thesis", suggestions.get(2));
+    }
+
+    @Test
+    public void getAPIKeys() throws Exception {
+        // ToDo: Adapt the following to your own account settings.
+        List<APIKey> keys = _r.getAPIKeys();
+        Assert.assertEquals(keys.size(), 2);
+        for (APIKey key : keys) {
+            Assert.assertTrue(isAPIKey(key.getKey()));
+        }
+    }
+
+    @Test
+    public void createAndDeleteAPIKey() throws Exception {
+        // ToDo: Adapt the following to your own account settings.
+        String key = _r.createAPIKey();
+        Assert.assertTrue(isAPIKey(key));
+        List<APIKey> keys = _r.getAPIKeys();
+        Assert.assertEquals(keys.size(), 3);
+        Assert.assertTrue(keys.stream().anyMatch(k -> k.getKey().equals(key)));
+        _r.deleteAPIKey(key);
+        keys = _r.getAPIKeys();
+        Assert.assertEquals(keys.size(), 2);
+        Assert.assertFalse(keys.stream().anyMatch(k -> k.getKey().equals(key)));
+    }
+
+    private boolean isAPIKey(String text) {
+        return text.matches("[a-zA-Z0-9]*");
     }
 }

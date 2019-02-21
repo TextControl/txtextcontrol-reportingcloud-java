@@ -13,6 +13,8 @@ hs_err_pid*
 
 .gradle
 build/
+out/
+src/test/resources/rc_credentials.json
 
 # Ignore Gradle GUI config
 gradle-app.setting

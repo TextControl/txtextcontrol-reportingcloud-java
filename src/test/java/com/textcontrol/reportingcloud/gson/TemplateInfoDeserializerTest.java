@@ -3,6 +3,7 @@ package com.textcontrol.reportingcloud.gson;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.textcontrol.reportingcloud.AccountSettings;
+import com.textcontrol.reportingcloud.ReportingCloudTest;
 import com.textcontrol.reportingcloud.TemplateInfo;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,9 +26,7 @@ public class TemplateInfoDeserializerTest {
     private static final String TestFixtureFileName = "get_template_info.json";
 
     public TemplateInfoDeserializerTest() throws IOException {
-        Path currentRelPath = Paths.get("");
-        String absPath = currentRelPath.toAbsolutePath().toString();
-        String testFixtureFilePath = absPath + "\\src\\test\\resources\\" + TestFixtureFileName;
+        String testFixtureFilePath = ReportingCloudTest.ResourcesDir + TestFixtureFileName;
         _testFixtureFileContent = new String(Files.readAllBytes(Paths.get(testFixtureFilePath)), "UTF-8");
     }
 

@@ -10,7 +10,7 @@
  *
  * License: https://raw.githubusercontent.com/TextControl/txtextcontrol-reportingcloud-java/master/LICENSE.md
  *
- * Copyright: © 2017 Text Control GmbH
+ * Copyright: © 2019 Text Control GmbH
  */
 package com.textcontrol.reportingcloud;
 
@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.sun.scenario.effect.impl.sw.java.JSWBlend_GREENPeer;
 import com.textcontrol.reportingcloud.gson.*;
 
 /**
@@ -68,6 +67,7 @@ public class ReportingCloud {
         gb.registerTypeAdapter(MergeBody.class, new MergeBodySerializer());
         gb.registerTypeAdapter(TemplateInfo.class, new TemplateInfoDeserializer());
         gb.registerTypeAdapter(FindAndReplaceBody.class, new FindAndReplaceBodySerializer());
+        gb.registerTypeAdapter(APIKey.class, new APIKeyDeserializer());
         gb.serializeNulls();
         _gson = gb.create();
     }
@@ -662,10 +662,50 @@ public class ReportingCloud {
     }
 
     /**
+     * Returns all available API Keys of the current account.
+     * @return All available API Keys of the current account.
+     * @throws IOException If an I/O error occurs.
+     */
+    public List<APIKey> getAPIKeys() throws IOException {
+        // Send request and return response
+        String res = request(ReqType.GET, "/account/apikeys");
+        return _gson.fromJson(res, new TypeToken<List<APIKey>>(){}.getType());
+    }
+
+    /**
+     * Deletes a given API Key from the account.
+     * @param key The key to delete from the account.
+     * @throws IllegalArgumentException If something went wrong concerning the HTTP request.
+     * @throws IOException If an I/O error occurs.
+     */
+    public void deleteAPIKey(String key) throws IOException, IllegalArgumentException {
+        // Parameter validation
+        if ((key == null) || key.isEmpty()) throw new IllegalArgumentException("The given key must not be null or empty.");
+
+        // Prepare query parameters
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("key", key);
+
+        // Send request
+        request(ReqType.DELETE, "/account/apikey", params);
+    }
+
+    /**
+     * Creates and returns a new API key.
+     * @return The new API key.
+     * @throws IOException If an I/O error occurs.
+     */
+    public String createAPIKey() throws IOException {
+        // Send request and return response
+        String res = request(ReqType.PUT, "/account/apikey");
+        return _gson.fromJson(res, String.class);
+    }
+
+    /**
      * Possible HTTP request types
      */
     private enum ReqType {
-        GET, POST, DELETE
+        GET, POST, DELETE, PUT
     }
 
     /**
@@ -691,7 +731,7 @@ public class ReportingCloud {
      */
     private String request(ReqType reqType, String endpoint, HashMap<String, Object> params)
             throws IllegalArgumentException, IOException {
-        return request(reqType, endpoint, params, (String) null);
+        return request(reqType, endpoint, params, null);
     }
 
     /**
@@ -715,6 +755,10 @@ public class ReportingCloud {
         con.setDoOutput(true);
         con.setRequestMethod(reqType.name());
         con.setRequestProperty("User-Agent", USER_AGENT);
+        if (reqType == ReqType.PUT) {
+            con.setChunkedStreamingMode(0);
+            // con.setRequestProperty("Content-Length", "0");
+        }
         con.setConnectTimeout(DEFAULT_TIMEOUT * 1000);
 
         // Basic Auth

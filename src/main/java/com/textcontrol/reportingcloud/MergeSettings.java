@@ -10,7 +10,7 @@
  *
  * License: https://raw.githubusercontent.com/TextControl/txtextcontrol-reportingcloud-java/master/LICENSE.md
  *
- * Copyright: © 2017 Text Control GmbH
+ * Copyright: © 2019 Text Control GmbH
  */
 package com.textcontrol.reportingcloud;
 
@@ -19,7 +19,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 /**
- * Holds the merge settings needed by the merge method.
+ * Holds the merge settings needed by the {@link com.textcontrol.reportingcloud.ReportingCloud#mergeDocument mergeDocument}
+ * method.
  *
  * @author Thorsten Kummerow
  */

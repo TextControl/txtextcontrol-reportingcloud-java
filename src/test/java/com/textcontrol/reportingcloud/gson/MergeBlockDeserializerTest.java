@@ -3,6 +3,7 @@ package com.textcontrol.reportingcloud.gson;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.textcontrol.reportingcloud.MergeBlock;
+import com.textcontrol.reportingcloud.ReportingCloudTest;
 import com.textcontrol.reportingcloud.TemplateInfo;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,9 +25,7 @@ public class MergeBlockDeserializerTest {
     private static final String TestFixtureFileName = "merge_block.json";
 
     public MergeBlockDeserializerTest() throws IOException {
-        Path currentRelPath = Paths.get("");
-        String absPath = currentRelPath.toAbsolutePath().toString();
-        String testFixtureFilePath = absPath + "\\src\\test\\resources\\" + TestFixtureFileName;
+        String testFixtureFilePath = ReportingCloudTest.ResourcesDir + TestFixtureFileName;
         _testFixtureFileContent = new String(Files.readAllBytes(Paths.get(testFixtureFilePath)), "UTF-8");
     }
 
