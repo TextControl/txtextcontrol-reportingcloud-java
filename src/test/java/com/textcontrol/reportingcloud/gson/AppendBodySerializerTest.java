@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -18,8 +19,9 @@ public class AppendBodySerializerTest {
     @Test
     public void serialize() {
         List<AppendDocument> docs = new ArrayList<>();
-        docs.add(new AppendDocument(new byte[] { 1, 2, 3, 4, 5, 6 }));
-        docs.add(new AppendDocument(new byte[] { 1, 2, 3, 4, 5, 6 }, DocumentDivider.NewSection));
+        byte[] testDocument = new byte[] { 1, 2, 3, 4, 5, 6 };
+        docs.add(new AppendDocument(testDocument));
+        docs.add(new AppendDocument(testDocument, DocumentDivider.NewSection));
         AppendBody ab = new AppendBody(docs, new DocumentSettings());
 
         GsonBuilder gb = new GsonBuilder();
@@ -36,7 +38,18 @@ public class AppendBodySerializerTest {
         Assert.assertTrue(obj.has("documents"));
         Assert.assertTrue(obj.has("documentSettings"));
 
-        // ToDo: finish implementation
+        JsonArray objDocs = (JsonArray) obj.get("documents");
+        Assert.assertEquals(2, objDocs.size());
 
+        JsonObject objDoc = (JsonObject) objDocs.get(0);
+        Assert.assertTrue(objDoc.has("document"));
+        Assert.assertTrue(objDoc.has("documentDivider"));
+        String docB64 = objDoc.get("document").getAsString();
+        Assert.assertTrue(docB64.length() > 0);
+        byte[] docData = Base64.getDecoder().decode(docB64);
+        Assert.assertArrayEquals(testDocument, docData);
+
+        int divider = objDoc.get("documentDivider").getAsInt();
+        Assert.assertEquals(1, divider);
     }
 }
