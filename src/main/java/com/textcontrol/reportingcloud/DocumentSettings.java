@@ -25,13 +25,13 @@ import java.time.format.DateTimeParseException;
  * @author Thorsten Kummerow
  */
 public class DocumentSettings {
-    protected String _author;
-    protected String _creatorApplication;
-    protected String _documentSubject;
-    protected String _documentTitle;
-    protected String _userPassword;
-    protected ZonedDateTime _lastModificationDate;
-    protected ZonedDateTime _creationDate;
+    private String _author;
+    private String _creatorApplication;
+    private String _documentSubject;
+    private String _documentTitle;
+    private String _userPassword;
+    private ZonedDateTime _lastModificationDate;
+    private ZonedDateTime _creationDate;
 
     public DocumentSettings() {
         this._author = null;

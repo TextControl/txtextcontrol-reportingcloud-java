@@ -49,7 +49,7 @@ public class ReportingCloudTest {
             Credentials cred = gson.fromJson(json, Credentials.class);
             Username = cred.username;
             Password = cred.password;
-        }
+        } 
         catch (Exception exc) {
             throw new RuntimeException("Something went wrong reading the credentials file. To run the tests put a "
                     + "file \"" + CredentialsFileName + "\" containing an object with the properties \"username\" "
@@ -214,8 +214,8 @@ public class ReportingCloudTest {
         docs.add(new AppendDocument(_testDocData, DocumentDivider.NewSection));
 
         DocumentSettings docSettings = new DocumentSettings();
-        docSettings._author = "John Doe";
-        docSettings._creatorApplication = "That App™";
+        docSettings.setAuthor("John Doe");
+        docSettings.setCreatorApplication("That App™");
 
         AppendBody ab = new AppendBody(docs, docSettings);
 

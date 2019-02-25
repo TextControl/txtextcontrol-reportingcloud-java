@@ -18,7 +18,7 @@ import java.security.InvalidParameterException;
 import java.util.List;
 
 /**
- * Used to pass data to the {@link com.textcontrol.reportingcloud.ReportingCloud#appendDocuments appendDocuments}
+ * Passes data to the {@link com.textcontrol.reportingcloud.ReportingCloud#appendDocuments appendDocuments}
  * method.
  *
  * @author Thorsten Kummerow

@@ -18,7 +18,7 @@ import java.security.InvalidParameterException;
 import java.util.Arrays;
 
 /**
- * Used to pass data to the {@link com.textcontrol.reportingcloud.ReportingCloud#mergeDocument mergeDocument}
+ * Passes data to the {@link com.textcontrol.reportingcloud.ReportingCloud#mergeDocument mergeDocument}
  * method.
  *
  * @author Thorsten Kummerow

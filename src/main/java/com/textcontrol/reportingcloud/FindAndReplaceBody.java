@@ -18,7 +18,7 @@ import javafx.util.Pair;
 import java.util.List;
 
 /**
- * Used to pass data to the find and replace method.
+ * Passes data to the find and replace method.
  *
  * @author Thorsten Kummerow
  */
