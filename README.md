@@ -1,8 +1,8 @@
 ![Logo](https://raw.githubusercontent.com/TextControl/txtextcontrol-reportingcloud-java/master/resource/rc_logo_512.png)
 
-# ReportingCloud Java Wrapper
+# ReportingCloud Java SDK
 
-This is the official Java wrapper for ReportingCloud, which is authored, maintained and fully supported by [Text Control](http://www.textcontrol.com).
+This is the official Java SDK for the ReportingCloud Web API. It is authored, maintained and fully supported by [Text Control GmbH](http://www.textcontrol.com).
 
 [http://www.reporting.cloud](http://www.reporting.cloud)
 
@@ -12,7 +12,7 @@ Before using ReportingCloud, please sign up to the service:
 
 ## API Documentation
 
-The API documentation for the ReportingCloud Java wrapper can be found [here](https://textcontrol.github.io/txtextcontrol-reportingcloud-java/).
+The API documentation for the ReportingCloud Java SDK can be found [here](https://textcontrol.github.io/txtextcontrol-reportingcloud-java/).
 
 ## Build
 

@@ -1,8 +1,8 @@
 /**
- * ReportingCloud Java Wrapper
+ * ReportingCloud Java SDK
  *
- * Official wrapper (authored by Text Control GmbH, publisher of ReportingCloud) to access 
- * ReportingCloud in Java.
+ * Official Java SDK for the ReportingCloud Web API. Authored, maintained and fully supported
+ * by Text Control GmbH. (http://www.textcontrol.com).
  *
  * Go to http://www.reporting.cloud to learn more about ReportingCloud
  * Go to https://github.com/TextControl/txtextcontrol-reportingcloud-java for the
@@ -26,7 +26,7 @@ import com.google.gson.reflect.TypeToken;
 import com.textcontrol.reportingcloud.gson.*;
 
 /**
- * The ReportingCloud API wrapper class.
+ * The ReportingCloud Java SDK main class.
  *
  * @author Thorsten Kummerow
  */
@@ -44,7 +44,7 @@ public class ReportingCloud {
     private String _version;
 
     /**
-     * Creates a new ReportingCloud wrapper instance.
+     * Creates a new instance.
      *
      * @param username The username.
      * @param password The password.
@@ -74,8 +74,8 @@ public class ReportingCloud {
     }
 
     /**
-     * Creates a new ReportingCloud wrapper instance with the API base URL
-     * set to <tt>"https://api.reporting.cloud"</tt>.
+     * Creates a new instance with the API base URL set to
+     * <tt>"https://api.reporting.cloud"</tt>.
      *
      * @param username The username.
      * @param password The password.
