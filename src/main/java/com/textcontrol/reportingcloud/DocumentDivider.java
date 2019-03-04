@@ -23,17 +23,17 @@ package com.textcontrol.reportingcloud;
 public enum DocumentDivider {
 
     /**
-     * Joint Photographic Experts Group
+     * None.
      */
     None,
 
     /**
-     * Portable Network Graphics
+     * New Paragraph.
      */
     NewParagraph,
 
     /**
-     * Windows Bitmap
+     * New Section.
      */
     NewSection;
 
